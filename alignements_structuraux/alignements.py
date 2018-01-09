@@ -11,9 +11,9 @@ import Bio.Alphabet
 
 seq1 = Seq("AGCATTTGGCTGGAAGCG")
 
-print(seq1)
-print(seq1.alphabet)
-print(len(seq1))
+#print(seq1)
+#print(seq1.alphabet)
+#print(len(seq1))
 
 seq2 = Seq("AGATGACTACCCTGGGTT")
 
@@ -33,8 +33,25 @@ def longer_common_sequence(seq1, seq2):
             
     return(int(m[len(seq1) - 1, len(seq2) - 1]))
     
-print(longer_common_sequence(seq1, seq2))
+#print(longer_common_sequence(seq1, seq2))
 
-def longer_common_sequence(Seqs):
+def longer_common_sequence_arb(Seqs):
     print(len(Seqs))
-    dims = 
+    dims = []
+    
+    for i in range(0, len(Seqs)):
+        dims += [len(Seqs[i])]
+        
+    m = np.zeros(dims)
+    
+    acc = np.zeros(len(Seqs))
+    print(m)
+    for s in range(0, len(Seqs)):
+        acc = np.zeros(len(Seqs))
+        #for i in range(0, len(Seqs[s])-1):
+            #m[i+1, 0] = max(m[i, 0], m[i, 0] + int(seq1[i+1] == seq2[0]))
+    
+    return(m)
+    
+print(longer_common_sequence_arb([seq1, seq2]))
+    
