@@ -6,16 +6,10 @@ Ceci est un script temporaire.
 """
 
 import numpy as np
-from Bio.Seq import Seq
-import Bio.Alphabet
+import Bio.Seq as bs
 
-seq1 = Seq("AGCATTTGGCTGGAAGCG")
-
-#print(seq1)
-#print(seq1.alphabet)
-#print(len(seq1))
-
-seq2 = Seq("AGATGACTACCCTGGGTT")
+seq1 = bs.Seq("AGCATTTGGCTGGAAGCG")
+seq2 = bs.Seq("AGATGACTACCCTGGGTT")
 
 def longer_common_sequence(seq1, seq2):
     m = np.zeros((len(seq1), len(seq2))).astype(int)
@@ -30,7 +24,6 @@ def longer_common_sequence(seq1, seq2):
     for i in range(0, len(seq1)-1):
         for j in range(0, len(seq2)-1):
             m[i+1, j+1] = int(max(m[i+1, j], m[i, j+1], m[i, j] + int(seq1[i+1] == seq2[j+1])))
-    print(m)
     return(int(m[len(seq1) - 1, len(seq2) - 1]))
     
 print("longer_common_sequence =",longer_common_sequence(seq1, seq2))
@@ -48,9 +41,10 @@ def longer_common_sequence_arb(Seqs):
     
     for i in range(0, len(Seqs)):
         dims += [len(Seqs[i])]
-        
+    #coucou
     m = np.zeros(dims).astype(int)
-    
+
+    #
     acc = tuple(np.zeros(len(Seqs)).astype(int))
     m.itemset(acc, int(are_equals(Seqs, acc)))
     
@@ -61,7 +55,7 @@ def longer_common_sequence_arb(Seqs):
             acc[s] += 1
             maxi = max(maxi, maxi + int(are_equals(Seqs, acc)))
             m.itemset(tuple(acc), maxi)
-            
+
     boucles = []
     
     for s in range(0, len(Seqs)):
@@ -110,5 +104,5 @@ def longer_common_sequence_arb(Seqs):
     
     return(m.item(tuple([-1]*len(Seqs))))
     
-print("longer_common_sequence_arb =",longer_common_sequence_arb([seq1, seq2, seq2]))
+print("longer_common_sequence_arb =",longer_common_sequence_arb([seq1, seq1, seq1]))
     
