@@ -9,13 +9,13 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
 
-seq1 = Seq("AGCATTTGGCTGGA")
+seq1 = Seq("WWAGCATTTGGCTGG")
 
 #print(seq1)
 #print(seq1.alphabet)
 #print(len(seq1))
 print(Bio.SubsMat.MatrixInfo.blosum62['T', 'G'])
-seq2 = Seq("AGATGACTACCCTG")
+seq2 = Seq("AGATGACTACCCT")
 
 #seq1 = Seq("AAAAAAAAAAAAAAAAAA")
 #seq2 = Seq("AAAAR")
@@ -41,13 +41,13 @@ def align(seq1, seq2, d, e):
     for i in range(1, len(seq1)):     #Calcul de la première ligne
         m[i+1, 0] = m[i, 0] - e
         ix[i+1, 0] = ix[i, 0] - e
-        m[i+1, 0] = m[i, 0] - e
+        iy[i+1, 0] = iy[i, 0] - e
         isfrom[i+1, 0] = 1
         
     for j in range(1, len(seq2)):     #Calcul de la première colonne
         m[0, j+1] = m[0, j] - e
-        ix[i+1, 0] = ix[i, 0] - e
-        iy[i+1, 0] = iy[i, 0] - e
+        ix[0, j+1] = ix[0, j] - e
+        iy[0, j+1] = iy[0, j] - e
         isfrom[0, j+1] = -1
     
     
@@ -86,12 +86,14 @@ def align(seq1, seq2, d, e):
 
     
     print(m)
+    print(ix)
+    print(iy)
     print(isfrom)
     print(index, maxi)
     print(' ')
     
-    str1 = (len(seq1) - index[0])*'*' 
-    str2 = (len(seq2) - index[1])*'*' 
+    str1 = ''
+    str2 = ''
     
     while(0 not in index):
         
@@ -109,16 +111,7 @@ def align(seq1, seq2, d, e):
             index = [index[0], index[1] - 1]
             str1 = '-' + str1
             str2 = seq2[index[1]] + str2
-    
-    if(index[0] == 0):
-        seq1 = (index[1]-1)*' ' + seq1
-        str1 = (index[1]-1)*' ' + str1
-        str2 = (index[1]-1)*'*'+ str2
-        
-    if(index[1] == 0):
-        seq2 = (index[0]-1)*' ' + seq2
-        str1 = (index[0]-1)*'*' + str1
-        str2 = (index[0]-1)*' '+ str2
+
         
     print(seq1)
     print(str1)
