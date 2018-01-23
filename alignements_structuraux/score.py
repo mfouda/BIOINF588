@@ -1,38 +1,40 @@
 import numpy as np
+from blocs import bloc
 
-def aligne(a, b):
-    return(0,a)
 
 print(np.isnan(np.nan))
 
-def aligne_multiple (blocs):
-    score =0;
-    n  = len(blocs)
-    distances = np.zeros(n,n)
-    distances.fill(np.nan)
+def aligne_multiple (seqs):
+    score_alignement =0;
+    n  = len(seqs)
+    list_blocs = []
+    for i in range (n) :
+        new_bloc = bloc()
+        new_bloc.init(seqs[i])
+        list_blocs += [new_bloc]
+    scores = np.zeros(n,n)
+    scores.fill(np.nan)
 
-    #on remplit avec les distances initiales
+    #on remplit avec les scores initiaux
     for i in range(n):
         for j in range(i):
-            distances[i, j] = aligne(blocs[i], blocs[j])[0]
-
+            scores[i, j] = list_blocs[i].score(list_blocs[j])
     for i in range(n):
-        #trouve la distance minimale et les vecteurs qui la réalisent : x et y
-        argmax = np.argmax(distances)
+        #trouve le score maximal et les vecteurs qui le réalisent : x et y
+        argmax = np.argmax(scores)
         x, y = argmax % n, argmax//n
         mini , maxi = min(x, y), max(x, y)
 
         #réalise la fusion de x et y, remplace le plus petit par la fusion et le plus grand sort du tableau (est remplacé par des nan)
-        result = aligne(blocs[x], blocs[y])
-        blocs[mini] = result[1]
-        distances[maxi,:].fill(np.nan)
-        distances[:,maxi].fill(np.nan)
+        s = list_blocs[mini].add(list_blocs[maxi])
+        scores[maxi,:].fill(np.nan)
+        scores[:,maxi].fill(np.nan)
         for j in range(n):
             #on remplit la ligne et la colonne de min la où il n'y a pas de nan
-            if not (np.isnan(distances[mini, j])):
-                distances[mini,j] = aligne(blocs[mini],blocs[j])[0]
-            if not (np.isnan(distances[j, mini])):
-                distances[j,mini] = aligne(blocs[j],blocs[mini])[0]
+            if not (np.isnan(scores[mini, j])):
+                scores[mini,j] = list_blocs[mini].score(list_blocs[j]))
+            if not (np.isnan(scores[j, mini])):
+                scores[j,mini] = list_blocs[j].score(list_blocs[mini]))
         #actualise le cout
-        score += result[0]
-    return (score,blocs[0])
+        score_alignement += s
+    return (score_alignement,list_blocs[0])
