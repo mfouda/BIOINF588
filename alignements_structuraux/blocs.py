@@ -9,7 +9,7 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
 
-seq = Seq("WWAGCATTTGGCTGG")
+seq = Seq("WWAGCATTT-GGCTGG")
 
 class bloc:
     
@@ -31,12 +31,21 @@ class bloc:
         return self.getSeqs()[i]
     
     def add(self, bloc):
-        self.seqs = aligner(self.getSeqs, bloc)
+        self.seqs = self.getSeqs() + bloc.getSeqs()  #aligner(self.getSeqs, bloc)
         self.nbSeqs = self.getNbSeqs() + bloc.getNbSeqs()
+        return 0 #retourner le score entre les deux
+    
+    def score(self, bloc):
+        return 0
         
 monBloc = bloc()
 
 monBloc.init(seq)
-
 print(monBloc.getNbSeqs())
 print(monBloc.getSeqs())
+
+
+score = monBloc.add(monBloc)
+print(monBloc.getNbSeqs())
+print(monBloc.getSeqs())
+print(score)
