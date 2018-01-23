@@ -32,9 +32,9 @@ def aligne_multiple (seqs):
         for j in range(n):
             #on remplit la ligne et la colonne de min la où il n'y a pas de nan
             if not (np.isnan(scores[mini, j])):
-                scores[mini,j] = list_blocs[mini].score(list_blocs[j]))
+                scores[mini,j] = list_blocs[mini].score(list_blocs[j])
             if not (np.isnan(scores[j, mini])):
-                scores[j,mini] = list_blocs[j].score(list_blocs[mini]))
+                scores[j,mini] = list_blocs[j].score(list_blocs[mini])
         #actualise le cout
         score_alignement += s
     return (score_alignement,list_blocs[0])
