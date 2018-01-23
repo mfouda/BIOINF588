@@ -1,5 +1,5 @@
 import numpy as np
-import blocs
+from .blocs import bloc
 
 
 print(np.isnan(np.nan))
@@ -9,7 +9,7 @@ def aligne_multiple (seqs):
     n  = len(seqs)
     list_blocs = []
     for i in range (n) :
-        new_bloc = blocs.bloc()
+        new_bloc = bloc()
         new_bloc.init(seqs[i])
         list_blocs += [new_bloc]
     scores = np.zeros(n,n)
