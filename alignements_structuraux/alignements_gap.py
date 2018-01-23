@@ -17,8 +17,8 @@ seq1 = Seq("WWAGCATTTGGCTGG")
 print(Bio.SubsMat.MatrixInfo.blosum62['T', 'G'])
 seq2 = Seq("AGATGACTACCCT")
 
-#seq1 = Seq("AAAAAAAAAAAAAAAAAA")
-#seq2 = Seq("AAAAR")
+#seq1 = Seq("CHAT")
+#seq2 = Seq("CAT")
 
 def align(seq1, seq2, d, e):
     
@@ -61,35 +61,32 @@ def align(seq1, seq2, d, e):
             else:
                 blosum = blosum62[seq2[j], seq1[i]]
             
-            #Calcul de m[i, j]
-            score = m[i, j] + blosum
-            isfromij = 0
+            #Calcul de m[i+1, j+1]
+            score = m[i, j]
+            if(ix[i, j] > score):
+                score = ix[i, j]
+            if(iy[i, j] > score):
+                score = iy[i, j]
+            score += blosum
             
-            if(ix[i, j] + blosum > score):
-                score = ix[i, j] + blosum
-                isfromij = 1
-                
-            if(iy[i, j] + blosum > score):
-                score = iy[i, j] + blosum
-                isfromij = -1
-            
-            isfrom[i+1, j+1] = isfromij
             m[i+1, j+1] = score
-            
             if(score >= maxi):
                 maxi = score
                 index = [i+1, j+1]
             
-            #Calcul de ix[i, j] et iy[i, j]
+            #Calcul de ix[i+1, j+1] et iy[i+1, j+1]
             ix[i+1, j+1] = max(m[i, j + 1] - d, ix[i, j + 1] - e)
             iy[i+1, j+1] = max(m[i + 1, j] - d, iy[i + 1, j] - e)
             
-
-    
+            #Calcul de isfrom[i+1, j+1]
+            isfromij = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
+            isfrom[i+1, j+1] = isfromij
+            
     print(m)
     print(ix)
     print(iy)
     print(isfrom)
+    print('')
     print(index, maxi)
     print(' ')
     
@@ -103,12 +100,12 @@ def align(seq1, seq2, d, e):
             str1 = seq1[index[0]] + str1
             str2 = seq2[index[1]] + str2
         
-        if(isfrom.item(tuple(index)) == 1):
+        elif(isfrom.item(tuple(index)) == 1):
             index = [index[0] - 1, index[1]]
             str1 = seq1[index[0]] + str1
             str2 = '-' + str2
             
-        if(isfrom.item(tuple(index)) == -1):
+        elif(isfrom.item(tuple(index)) == -1):
             index = [index[0], index[1] - 1]
             str1 = '-' + str1
             str2 = seq2[index[1]] + str2
@@ -121,13 +118,13 @@ def align(seq1, seq2, d, e):
     
     return('done')
     
-align(seq1, seq2, 11, 1)
+align(seq1, seq2, 10, 0.5)
 
 
 
 
 
-    
+
 # =============================================================================
 #     
 # def are_equals(Seqs, loc):      #Dit si tous les acides aminés sont les mêmes sur une location
