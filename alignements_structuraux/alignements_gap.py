@@ -51,7 +51,7 @@ def align(seq1, seq2, d, e):
         isfrom[0, j+1] = -1
     
     
-    index, maxi = (0,0), m[0][0]
+    index, maxi = [0,0], m[0][0]
     
     for i in range(0, len(seq1)):     #Relation de récurrence
         for j in range(0, len(seq2)):
@@ -68,6 +68,7 @@ def align(seq1, seq2, d, e):
             if(ix[i, j] + blosum > score):
                 score = ix[i, j] + blosum
                 isfromij = 1
+                
             if(iy[i, j] + blosum > score):
                 score = iy[i, j] + blosum
                 isfromij = -1
