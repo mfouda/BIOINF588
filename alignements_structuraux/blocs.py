@@ -11,9 +11,14 @@ import Bio.SubsMat.MatrixInfo
 
 class bloc:
     
-    def __init__(self, seq):
+    def __init__(self, seq, name = 0):
         self.nbSeqs = 1
         self.seqs = [seq]
+        self.dendo = ['']
+        if(name == 0):
+            self.name = ['aSequenceHasNoName']
+        else:
+            self.name = [name]
         self.score = np.nan
         
     def getNbSeqs(self):
@@ -25,6 +30,18 @@ class bloc:
     def getSeq(self, i):
         return self.getSeqs()[i]
     
+    def getNames(self):
+        return self.name
+    
+    def getName(self, i):
+        return self.getNames()[i]
+    
+    def getDendos(self):
+        return self.dendo
+    
+    def getDendo(self, i):
+        return self.getDendos()[i]
+    
     def getCol(self, i):
         col = []
         for k in range(0, self.getNbSeqs()):
@@ -32,19 +49,25 @@ class bloc:
         return col
     
     def show(self):
-        print('############')
-        print('### BLOC ###')
-        print('############')
+        print('#'*30)
+        print('#######      BLOC      #######')
+        print('#'*30)
         if(self.getNbSeqs() == 1):
             print('The bloc has 1 sequence')
         else:
             print('The bloc has '+str(self.getNbSeqs())+' sequences')
+            
+        print('The alignement is of lenght',len(self.getSeq(0)))
         if(not np.isnan(self.score)):
             print('The last merging score is',self.score)
-        print('-'*len(self.getSeq(0)))
-        for i in range(0, self.getNbSeqs()):
-            print(self.getSeq(i))
-        print('-'*len(self.getSeq(0)))
+        print('-'*30)
+        if('aSequenceHasNoName' in self.getNames()):
+            for i in range(0, self.getNbSeqs()):
+                print(self.getSeq(i), self.getDendo(i))
+        else:
+             for i in range(0, self.getNbSeqs()):
+                print(self.getSeq(i), self.getName(i), self.getDendo(i))   
+        print('#'*30)
         
     def blosum(self, col1, col2, d, e):
         blosum62 = Bio.SubsMat.MatrixInfo.blosum62
@@ -158,9 +181,56 @@ class bloc:
                     else:
                         seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]         
         
-        self.seqs = seqs     
+        for i in range(0, len(seqs)):
+            if(seqs[i][0] == '-'):
+                seqs[i] = '+' + seqs[i][1:]
+            for k in range(0, len(seqs[i])-1):
+                if(seqs[i][k+1] == '+' and (seqs[i][k] == '+' or seqs[i][k] == '-')):
+                    seqs[i] = seqs[i][:k+1] + '-' + seqs[i][k+2:]
+                if(seqs[i][k+1] == '-' and (seqs[i][k] != '-' and seqs[i][k] != '+')):
+                    seqs[i] = seqs[i][:k+1] + '+' + seqs[i][k+2:]
+        
+        self.seqs = seqs        
         self.nbSeqs = self.getNbSeqs() + bloc.getNbSeqs()
         self.score = maxi
+        
+        
+        dendo1 = self.getDendos()
+        dendo2 = bloc.getDendos()
+        ld1 = len(dendo1[0])
+        ld2 = len(dendo2[0])        
+        if(ld1 > ld2):
+            for i in range(0, len(dendo1)):
+                if(i == int(len(dendo1)/2)):
+                    dendo1[i] += '-,'
+                elif(i > int(len(dendo1)/2)):
+                    dendo1[i] += ' |'
+                else:
+                    dendo1[i] += '  '
+            for i in range(0, len(dendo2)):
+                if(i == int(len(dendo2)/2)):
+                    dendo2[i] = dendo2[i] + '-'*(ld1 - ld2) + "-'"
+                elif(i > int(len(dendo2)/2)):
+                    dendo2[i] = dendo2[i] + ' '*(ld1 - ld2) + '  '
+                else:
+                    dendo2[i] = dendo2[i] + ' '*(ld1 - ld2) + ' |'
+        else:
+            for i in range(0, len(dendo1)):
+                if(i == int(len(dendo1)/2)):
+                    dendo1[i] = dendo1[i] + '-'*(ld2 - ld1) + '-,'
+                elif(i > int(len(dendo1)/2)):
+                    dendo1[i] = dendo1[i] + ' '*(ld2 - ld1) + ' |'
+                else:
+                    dendo1[i] = dendo1[i] + ' '*(ld2 - ld1) + '  '
+            for i in range(0, len(dendo2)):
+                if(i == int(len(dendo2)/2)):
+                    dendo2[i] += "-'"
+                elif(i > int(len(dendo2)/2)):
+                    dendo2[i] += '  '
+                else:
+                    dendo2[i] += ' |'
+        self.dendo = dendo1 + dendo2
+        self.name = self.getNames() + bloc.getNames()
         return maxi #retourner le score entre les deux
     
     def alignementscore(self, bloc, d, e):
@@ -175,3 +245,4 @@ class bloc:
 #score = bloc1.alignementscore(bloc2, 10, 0.5)
 #print(score)
 #bloc1.show()
+#print(type(bloc1))
