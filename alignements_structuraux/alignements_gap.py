@@ -118,12 +118,16 @@ def align(seq1, seq2, d, e):
     
     return('done')
     
-align(seq1, seq2, 10, 0.5)
+align(seq1, seq2, 11, 1)
 
-
-
-
-
+seq = Seq('')
+print(seq)
+seq += Seq('AG')
+print(seq)
+seq += Seq('+---ZRRRTGV')
+print(seq)
+seq += 'FFZZDZ'
+print(seq)
 
 # =============================================================================
 #     
