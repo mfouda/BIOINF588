@@ -4,6 +4,7 @@ Created on Tue Jan 30 14:55:57 2018
 
 @author: Jasmine
 """
+import pickle as pk
 
 def pLoop_naif (seq) :
     result = False
@@ -14,3 +15,12 @@ def pLoop_naif (seq) :
                 if seq[i+7] == 'S' or seq[i+7] == 'T' :
                     result = True
     return result
+
+def find_pLoop (prots) :
+    dicoPLOOP = dict()
+    dicoPROT = pk.load(open( "dicoPROT.p", "rb" ))
+    for k, v in dicoPROT.items() :
+        if pLoop_naif(v) :
+            dicoPLOOP[k] = len(v)
+    pk.dump(dicoPROT, open( "dicoPLOOP.p", "wb" ) )
+        
