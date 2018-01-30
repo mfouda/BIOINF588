@@ -21,7 +21,7 @@ def find_pLoop () :
     dicoPROT = pk.load(open( "dicoPROT.p", "rb" ))
     for k, v in dicoPROT.items() :
         if pLoop_naif(v) :
-            dicoPLOOP[k] = len(v)
+            dicoPLOOP[k] = v
     pk.dump(dicoPROT, open( "dicoPLOOP.p", "wb" ) )
     
 find_pLoop()
