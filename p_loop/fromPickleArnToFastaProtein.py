@@ -19,3 +19,5 @@ print(dicoARN["R0040C"])
 print(dicoPROT["R0040C"])
 
 pk.dump(dicoPROT, open( "dicoPROT.p", "wb" ) )
+
+
