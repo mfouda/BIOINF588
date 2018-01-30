@@ -120,7 +120,6 @@ class bloc:
             iy[0, j+1] = iy[0, j] - e
             isfrom[0, j+1] = -1
         
-        
         index, maxi = [0,0], m[0][0]
         
         for i in range(0, len(self.getSeqs()[0])):     #Relation de récurrence
