@@ -15,10 +15,6 @@ class bloc:
         self.nbSeqs = 1
         self.seqs = [seq]
         self.dendo = ['']
-        if(name == 0):
-            self.name = ['aSequenceHasNoName']
-        else:
-            self.name = [name]
         self.score = np.nan
         
     def getNbSeqs(self):
@@ -31,10 +27,13 @@ class bloc:
         return self.getSeqs()[i]
     
     def getNames(self):
-        return self.name
+        names = []
+        for i in range(0, self.getNbSeqs()):
+            names += [self.getSeq(i).getName()]
+        return names
     
     def getName(self, i):
-        return self.getNames()[i]
+        return self.getSeq(i).getName()
     
     def getDendos(self):
         return self.dendo
@@ -45,7 +44,7 @@ class bloc:
     def getCol(self, i):
         col = []
         for k in range(0, self.getNbSeqs()):
-            col += [self.getSeq(k)[i]]
+            col += [self.getSeq(k).getAminoAcid(i)]
         return col
     
     def show(self):
@@ -63,10 +62,10 @@ class bloc:
         print('-'*30)
         if('aSequenceHasNoName' in self.getNames()):
             for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i), self.getDendo(i))
+                print(self.getSeq(i).printSeq(), self.getDendo(i))
         else:
              for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i), self.getName(i), self.getDendo(i))   
+                print(self.getSeq(i).printSeq(), self.getName(i), self.getDendo(i))   
         print('#'*30)
         
     def blosum(self, col1, col2, d, e):

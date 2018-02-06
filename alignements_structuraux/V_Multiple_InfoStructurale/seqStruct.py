@@ -127,6 +127,12 @@ class seqStruct:
     
     def getName(self):
         return self.name
+    
+    def printSeq(self):
+        strseq = ""
+        for i in range(0, len(self.getSequence())):
+            strseq += self.getAminoAcid(i)["name"]
+        return strseq
         
 path = "2byg.pdb"
 seq = seqStruct(path)
