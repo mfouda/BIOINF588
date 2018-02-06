@@ -14,7 +14,6 @@ class bloc:
     def __init__(self, seq, name = 0):
         self.nbSeqs = 1
         self.seqs = [seq]
-        self.struct = []
         self.dendo = ['']
         if(name == 0):
             self.name = ['aSequenceHasNoName']

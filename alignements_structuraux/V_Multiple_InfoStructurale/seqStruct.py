@@ -7,10 +7,7 @@ Created on Wed Jan 31 09:56:19 2018
 
 import numpy as np
 from Bio.Seq import Seq
-import Bio.PDB as pdb
-
-
-path = "2byg.pdb"
+import Bio.PDB as pdb        
 
 def RepresentsInt(s):
     try: 
@@ -92,8 +89,8 @@ def get_seq(path):
                         num_atom += 1
                     bary_res /= num_atom
                     #aminoacid["bary_res"] = bary_res
-                    aminoacid["enfouissement"] = int(1000*sum((bary_res - dico["baryres"])**2)**0.5)/1000
-                    
+                    aminoacid["enfouissement"] = sum((bary_res - dico["baryres"])**2)**0.5
+                    aminoacid["struct"] = "V"
                     seq[get_num(residue)] = aminoacid
     
     lines = open(path, "r").readlines()
@@ -109,7 +106,29 @@ def get_seq(path):
             end = int(line[34:37])
             for i in range(start, end+1):
                 seq[i]["struct"] = "F"
-    
+
     return seq
 
-print(get_seq(path))
+
+class seqStruct:
+    
+    def __init__(self, path):
+        self.name = path[:-4]
+        self.seq = []
+        dico = get_seq(path)
+        for cle in dico:
+            self.seq += [dico[cle]]
+        
+    def getAminoAcid(self, i):
+        return self.seq[i]
+    
+    def getSequence(self):
+        return self.seq
+    
+    def getName(self):
+        return self.name
+        
+path = "2byg.pdb"
+seq = seqStruct(path)
+print(seq.getAminoAcid(2))
+print(seq.name)
