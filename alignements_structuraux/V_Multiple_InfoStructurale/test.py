@@ -9,27 +9,29 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.PDB as pdb
 
+name = "2byg"
+parser = pdb.PDBParser()
+structure = parser.get_structure(name, '2byg.pdb')
 
-structure = pdb.MMCIFParser().get_structure('name', '2GAA.cif')
-
-
-name = '2GAA'
 dico = dict()
 dico['name'] = name
-dico['numM'] = 0
-dico['numC'] = 0
-dico['numR'] = 0
-dico['numA'] = 0
+dico['num Model'] = 0
+dico['num Chain'] = 0
+dico['num Residue'] = 0
+dico['num Atom'] = 0
+
+i = 0
 
 for model in structure:
-    dico['numM'] += 1
+    dico['num Model'] += 1
     for chain in model:
-        dico['numC'] += 1
+        dico['num Chain'] += 1
         for residue in chain:
-            dico['numR'] += 1
+            dico['num Residue'] += 1
+            i += 1
+            print(i, residue.get_resname())
             for atom in residue:
-                dico['numA'] += 1
+                dico['num Atom'] += 1
+                
+
 print(dico)
-
-
-dssp = pdb.DSSP(structure[0], '2GAA.pdb')
