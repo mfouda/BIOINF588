@@ -11,7 +11,7 @@ import Bio.PDB as pdb
 
 name = "2byg"
 parser = pdb.PDBParser()
-structure = parser.get_structure(name, name+'.pdb')
+structure = parser.get_structure(name, name + '.pdb')
 repr(structure)
 
 dico = dict()
@@ -33,6 +33,5 @@ for model in structure:
             print(i, residue.get_resname())
             for atom in residue:
                 dico['num Atom'] += 1
-                
 
 print(dico)
