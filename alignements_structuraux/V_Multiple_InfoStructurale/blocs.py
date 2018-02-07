@@ -9,6 +9,7 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
 from seqStruct import seqStruct
+from score import aminoAcidScorer
 
 class bloc:
     
@@ -61,44 +62,30 @@ class bloc:
         else:
             print('The bloc has '+str(self.getNbSeqs())+' sequences')
             
-        print('The alignement is of lenght',len(self.getSeq(0)))
+        print('The alignement is of lenght', self.getSeq(0).getLength())
         if(not np.isnan(self.score)):
             print('The last merging score is',self.score)
         print('-'*30)
         if('aSequenceHasNoName' in self.getNames()):
             for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i).printSequence(), self.getDendo(i))
+                print(self.getSeq(i).toString(), self.getDendo(i))
         else:
              for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i).printSequence(), self.getName(i), self.getDendo(i))   
+                print(self.getSeq(i).toString(), self.getName(i) + " "*(max([len(n) for n in self.getNames()]) - len(self.getName(i))), self.getDendo(i))   
         print('#'*30)
         
-    def blosum(self, col1, col2, d, e):
-        blosum62 = Bio.SubsMat.MatrixInfo.blosum62
-        blosum = 0
+    def aminoAcidScore(self, col1, col2, scorer):
+        aaScore = 0
         
         for i in range(0, len(col1)):
             for j in range(0, len(col2)):
-                if((col1[i], col2[j]) in blosum62):
-                    blosum += blosum62[col1[i], col2[j]]
-                elif((col2[j], col1[i]) in blosum62):
-                    blosum += blosum62[col2[j], col1[i]]
-                elif(col1[i] == '-'):
-                    if(col2[j] == '+'):
-                        blosum += -d
-                    if(col2[j] != '-'):
-                        blosum += -e
-                elif(col2[j] == '-'):
-                    if(col1[i] == '+'):
-                        blosum += -d
-                    if(col1[i] != '-'):
-                        blosum += -e
-                        
-        return blosum / (len(col1)*len(col2))     
+                aaScore += scorer.computeScore(col1[i], col2[j])
+                
+        return aaScore / (len(col1)*len(col2))     
     
-    def scoreIndexIsfrom(self, bloc, d, e):
+    def scoreIndexIsfrom(self, bloc, scorer):
         
-        size = (len(self.getSeq(0).getSequence()) + 1, len(bloc.getSeq(0).getSequence()) + 1)
+        size = (self.getSeq(0).getLength() + 1, bloc.getSeq(0).getLength() + 1)
         m = np.zeros(size).astype(int)
         ix = np.zeros(size).astype(int)
         iy = np.zeros(size).astype(int)
@@ -109,22 +96,31 @@ class bloc:
         #iy = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         #isfrom = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         
-        m[1, 0] = -d
-        m[0, 1] = -d
-        ix[1, 0] = -d
-        ix[0, 1] = -d
-        iy[1, 0] = -d
-        iy[0, 1] = -d
+        minus, plus = dict(), dict()
+        minus["name"], plus["name"] = "-", "+"
+        minus["struct"], plus["struct"] = "", ""
+        minus["enfouissement"], plus["enfouissement"] = 0, 0
+        
+        ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
+        db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
+        m[1, 0] = -ds
+        m[0, 1] = -db
+        ix[1, 0] = -ds
+        ix[0, 1] = -db
+        iy[1, 0] = -ds
+        iy[0, 1] = -db
         isfrom[0, 1] = -1
         isfrom[1, 0] = 1
         
-        for i in range(1, len(self.getSeq(0).getSequence())):     #Calcul de la première ligne
+        for i in range(1, self.getSeq(0).getLength()):     #Calcul de la première ligne
+            e = self.aminoAcidScore(self.getCol(i), [minus], scorer)
             m[i+1, 0] = m[i, 0] - e
             ix[i+1, 0] = ix[i, 0] - e
             iy[i+1, 0] = iy[i, 0] - e
             isfrom[i+1, 0] = 1
             
-        for j in range(1, len(bloc.getSeq(0).getSequence())):     #Calcul de la première colonne
+        for j in range(1, bloc.getSeq(0).getLength()):     #Calcul de la première colonne
+            e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
             m[0, j+1] = m[0, j] - e
             ix[0, j+1] = ix[0, j] - e
             iy[0, j+1] = iy[0, j] - e
@@ -132,13 +128,12 @@ class bloc:
         
         index, maxi = [0,0], m[0][0]
         
-        for i in range(0, len(self.getSeq(0).getSequence())):     #Relation de récurrence
-            for j in range(0, len(bloc.getSeq(0).getSequence())):
-                
-                coli = self.getCol(i)
+        for i in range(0, self.getSeq(0).getLength()):     #Relation de récurrence
+            coli = self.getCol(i)
+            for j in range(0, bloc.getSeq(0).getLength()):
                 colj = bloc.getCol(j)
                 
-                blosum = self.blosum(coli, colj, d, e)
+                blosum = self.aminoAcidScore(coli, colj, scorer)
                 
                 #Calcul de m[i+1, j+1]
                 score = max([iy[i, j], m[i, j], ix[i, j]]) + blosum
@@ -149,8 +144,8 @@ class bloc:
                     index = [i+1, j+1]
                 
                 #Calcul de ix[i+1, j+1] et iy[i+1, j+1]
-                ix[i+1, j+1] = max(m[i, j + 1] - d, ix[i, j + 1] - e)
-                iy[i+1, j+1] = max(m[i + 1, j] - d, iy[i + 1, j] - e)
+                ix[i+1, j+1] = max(m[i, j + 1] - scorer.getParams()["openGap"], ix[i, j + 1] - scorer.getParams()["extendGap"])
+                iy[i+1, j+1] = max(m[i + 1, j] - scorer.getParams()["openGap"], iy[i + 1, j] - scorer.getParams()["extendGap"])
                 
                 #Calcul de isfrom[i+1, j+1]
                 isfromij = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
@@ -158,12 +153,16 @@ class bloc:
                 
         return maxi, index, isfrom
         
-    def add(self, bloc, d, e):
-        maxi, index, isfrom = self.scoreIndexIsfrom(bloc, d, e)
+    def add(self, bloc, scorer):
+        maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
         
         seqs = []
         for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
             seqs += [seqStruct()]
+            if(i < self.getNbSeqs()):
+                seqs[-1].setName(self.getSeq(i).getName())
+            else:
+                seqs[-1].setName(bloc.getSeq(i - self.getNbSeqs()).getName())
         
         minus, plus = dict(), dict()
         minus["name"], plus["name"] = "-", "+"
@@ -202,15 +201,15 @@ class bloc:
                         #seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]         
         
         for i in range(0, len(seqs)):
-            if(seqs[i][0] == '-'):
+            if(seqs[i].getAminoAcid(0)["name"] == '-'):
                 seqs[i].setAminoAcid(0, plus)
                 #seqs[i] = '+' + seqs[i][1:]
-            for k in range(0, len(seqs[0])-1):
+            for k in range(0, seqs[0].getLength()-1):
                 if(seqs[i].getAminoAcid(k+1)["name"] == '+' and (seqs[i].getAminoAcid(k)["name"] == '+' or seqs[i].getAminoAcid(k)["name"] == '-')):
                     seqs[i].setAminoAcid(k+1, minus)
                     #seqs[i] = seqs[i][:k+1] + '-' + seqs[i][k+2:]
                 if(seqs[i].getAminoAcid(k+1)["name"] == '-' and (seqs[i].getAminoAcid(k)["name"] != '-' and seqs[i].getAminoAcid(k)["name"] != '+')):
-                    seqs[i].setAminoAcid(k+1, minus)
+                    seqs[i].setAminoAcid(k+1, plus)
                     #seqs[i] = seqs[i][:k+1] + '+' + seqs[i][k+2:]
         
         self.seqs = seqs        
@@ -256,8 +255,8 @@ class bloc:
         self.setNames(self.getNames() + bloc.getNames())
         return maxi #retourner le score entre les deux
     
-    def alignementscore(self, bloc, d, e):
-        maxi, index, isfrom = self.scoreIndexIsfrom(bloc, d, e)
+    def alignementscore(self, bloc, scorer):
+        maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
         return maxi #retourner le score entre les deux
 
 #seq = Seq("WWAGCATTTGGCTGG")

@@ -133,13 +133,19 @@ class seqStruct:
     def getSequence(self):
         return self.seq
     
+    def setSequence(self, seq):
+        self.seq = seq
+    
+    def getLength(self):
+        return len(self.getSequence())
+    
     def getName(self):
         return self.name
     
     def setName(self, name):
         self.name = name
     
-    def printSequence(self):
+    def toString(self):
         strseq = ""
         for i in range(0, len(self.getSequence())):
             strseq += self.getAminoAcid(i)["name"]
@@ -157,11 +163,9 @@ class seqStruct:
         for k in range(0, len(self.getSequence())):
             if(random.uniform(0, 1) < per):
                 seq.addAminoAcidAfter(self.getAminoAcid(k))
-                #seqs[k] += seqs[0][i]
             else:
-                aa = self.getAminoAcid(k)
+                aa = (self.getAminoAcid(k)).copy()
                 aa["name"] = AA[random.randint(0, 19)]
                 seq.addAminoAcidAfter(aa)
-                #seqs[k] += AA[random.randint(0, 19)]
-        seq.setName(self.getName() + "_mut" + str(random.randint(0, 100)))
+        seq.setName(self.getName() + "_mut" + str(random.randint(0, 10000)))
         return seq
