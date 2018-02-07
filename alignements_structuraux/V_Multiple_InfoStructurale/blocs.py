@@ -8,6 +8,7 @@ Created on Tue Jan 23 14:19:05 2018
 import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
+from seqStruct import seqStruct
 
 class bloc:
     
@@ -32,6 +33,10 @@ class bloc:
             names += [self.getSeq(i).getName()]
         return names
     
+    def setNames(self, names):
+        for i in range(0, self.getNbSeqs()):
+            self.seqs[i].setName(names[i])
+        
     def getName(self, i):
         return self.getSeq(i).getName()
     
@@ -152,41 +157,55 @@ class bloc:
         
         seqs = []
         for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
-            seqs += [Seq('')]
+            seqs += [seqStruct()]
         
+        minus, plus = dict(), dict()
+        minus["name"], plus["name"] = "-", "+"
+        minus["struct"], plus["struct"] = "", ""
+        minus["enfouissement"], plus["enfouissement"] = 0, 0
+                        
         while(0 not in index):
             if(isfrom.item(tuple(index)) == 0):
                 index = [index[0] - 1, index[1] - 1]
                 for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
                     if(i < self.getNbSeqs()):
-                        seqs[i] = self.getSeq(i)[index[0]] + seqs[i]
+                        seqs[i].addAminoAcidBefore(self.getSeq(i).getAminoAcid(index[0]))
+                        #seqs[i] = self.getSeq(i)[index[0]] + seqs[i]
                     else:
-                        seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]
+                        seqs[i].addAminoAcidBefore(bloc.getSeq(i - self.getNbSeqs()).getAminoAcid(index[1]))
+                        #seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]
             
             elif(isfrom.item(tuple(index)) == 1):
                 index = [index[0] - 1, index[1]]
                 for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
                     if(i < self.getNbSeqs()):
-                        seqs[i] = self.getSeq(i)[index[0]] + seqs[i]
+                        seqs[i].addAminoAcidBefore(self.getSeq(i).getAminoAcid(index[0]))
+                        #seqs[i] = self.getSeq(i)[index[0]] + seqs[i]
                     else:
-                        seqs[i] = '-' + seqs[i]
+                        seqs[i].addAminoAcidBefore(minus)
+                        #seqs[i] = '-' + seqs[i]
                 
             elif(isfrom.item(tuple(index)) == -1):
                 index = [index[0], index[1] - 1]
                 for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
                     if(i < self.getNbSeqs()):
-                        seqs[i] = '-' + seqs[i]
+                        seqs[i].addAminoAcidBefore(minus)
+                        #seqs[i] = '-' + seqs[i]
                     else:
-                        seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]         
+                        seqs[i].addAminoAcidBefore(bloc.getSeq(i - self.getNbSeqs()).getAminoAcid(index[1]))
+                        #seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]         
         
         for i in range(0, len(seqs)):
             if(seqs[i][0] == '-'):
-                seqs[i] = '+' + seqs[i][1:]
-            for k in range(0, len(seqs[i])-1):
-                if(seqs[i][k+1] == '+' and (seqs[i][k] == '+' or seqs[i][k] == '-')):
-                    seqs[i] = seqs[i][:k+1] + '-' + seqs[i][k+2:]
-                if(seqs[i][k+1] == '-' and (seqs[i][k] != '-' and seqs[i][k] != '+')):
-                    seqs[i] = seqs[i][:k+1] + '+' + seqs[i][k+2:]
+                seqs[i].setAminoAcid(0, plus)
+                #seqs[i] = '+' + seqs[i][1:]
+            for k in range(0, len(seqs[0])-1):
+                if(seqs[i].getAminoAcid(k+1)["name"] == '+' and (seqs[i].getAminoAcid(k)["name"] == '+' or seqs[i].getAminoAcid(k)["name"] == '-')):
+                    seqs[i].setAminoAcid(k+1, minus)
+                    #seqs[i] = seqs[i][:k+1] + '-' + seqs[i][k+2:]
+                if(seqs[i].getAminoAcid(k+1)["name"] == '-' and (seqs[i].getAminoAcid(k)["name"] != '-' and seqs[i].getAminoAcid(k)["name"] != '+')):
+                    seqs[i].setAminoAcid(k+1, minus)
+                    #seqs[i] = seqs[i][:k+1] + '+' + seqs[i][k+2:]
         
         self.seqs = seqs        
         self.nbSeqs = self.getNbSeqs() + bloc.getNbSeqs()
@@ -228,7 +247,7 @@ class bloc:
                 else:
                     dendo2[i] += ' |'
         self.dendo = dendo1 + dendo2
-        self.name = self.getNames() + bloc.getNames()
+        self.setNames(self.getNames() + bloc.getNames())
         return maxi #retourner le score entre les deux
     
     def alignementscore(self, bloc, d, e):

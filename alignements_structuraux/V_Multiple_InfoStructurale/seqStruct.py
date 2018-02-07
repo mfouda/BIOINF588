@@ -8,6 +8,7 @@ Created on Wed Jan 31 09:56:19 2018
 import numpy as np
 from Bio.Seq import Seq
 import Bio.PDB as pdb        
+import random
 
 def RepresentsInt(s):
     try: 
@@ -112,27 +113,58 @@ def get_seq(path):
 
 class seqStruct:
     
-    def __init__(self, path):
-        self.name = path[:-4]
-        self.seq = []
-        dico = get_seq(path)
-        for cle in dico:
-            self.seq += [dico[cle]]
+    def __init__(self, path = ""):
+        if(path == ""):
+            self.name = "aSequenceHasNoName"
+            self.seq = []
+        else:
+            self.name = path[:-4]
+            self.seq = []
+            dico = get_seq(path)
+            for cle in dico:
+                self.seq += [dico[cle]]
         
     def getAminoAcid(self, i):
         return self.seq[i]
     
+    def setAminoAcid(self, i, aa):
+        self.seq[i] = aa
+        
     def getSequence(self):
         return self.seq
     
     def getName(self):
         return self.name
     
+    def setName(self, name):
+        self.name = name
+    
     def printSeq(self):
         strseq = ""
         for i in range(0, len(self.getSequence())):
             strseq += self.getAminoAcid(i)["name"]
         return strseq
+    
+    def addAminoAcidAfter(self, aa):
+        self.seq = self.seq + [aa]
+        
+    def addAminoAcidBefore(self, aa):
+        self.seq = [aa] + self.seq
+        
+    def mutate(self, per):
+        AA = ['G', 'P', 'A', 'V', 'L', 'I', 'M', 'C', 'F', 'Y', 'W', 'H', 'K', 'R', 'Q', 'N', 'E', 'D', 'S', 'T']
+        seq = seqStruct()
+        for k in range(1, len(self.getSequence())):
+            if(random.uniform(0, 1) < per):
+                seq.addAminoAcidAfter(self.getAminoAcid(k))
+                #seqs[k] += seqs[0][i]
+            else:
+                aa = self.getAminoAcid(k)
+                aa["name"] = AA[random.randint(0, 19)]
+                seq.addAminoAcidAfter(aa)
+                #seqs[k] += AA[random.randint(0, 19)]
+        seq.setName(self.getName + "_mut" + str(random.randint(0, 100)))
+        return seq
         
 path = "2byg.pdb"
 seq = seqStruct(path)
