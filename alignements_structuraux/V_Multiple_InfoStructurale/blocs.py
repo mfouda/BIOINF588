@@ -12,7 +12,7 @@ from seqStruct import seqStruct
 
 class bloc:
     
-    def __init__(self, seq, name = 0):
+    def __init__(self, seq):
         self.nbSeqs = 1
         self.seqs = [seq]
         self.dendo = ['']
@@ -67,10 +67,10 @@ class bloc:
         print('-'*30)
         if('aSequenceHasNoName' in self.getNames()):
             for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i).printSeq(), self.getDendo(i))
+                print(self.getSeq(i).printSequence(), self.getDendo(i))
         else:
              for i in range(0, self.getNbSeqs()):
-                print(self.getSeq(i).printSeq(), self.getName(i), self.getDendo(i))   
+                print(self.getSeq(i).printSequence(), self.getName(i), self.getDendo(i))   
         print('#'*30)
         
     def blosum(self, col1, col2, d, e):
@@ -98,10 +98,16 @@ class bloc:
     
     def scoreIndexIsfrom(self, bloc, d, e):
         
-        m = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        ix = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        iy = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        isfrom = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
+        size = (len(self.getSeq(0).getSequence()) + 1, len(bloc.getSeq(0).getSequence()) + 1)
+        m = np.zeros(size).astype(int)
+        ix = np.zeros(size).astype(int)
+        iy = np.zeros(size).astype(int)
+        isfrom = np.zeros(size).astype(int)
+        del size
+        #m = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
+        #ix = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
+        #iy = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
+        #isfrom = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         
         m[1, 0] = -d
         m[0, 1] = -d
@@ -112,13 +118,13 @@ class bloc:
         isfrom[0, 1] = -1
         isfrom[1, 0] = 1
         
-        for i in range(1, len(self.getSeqs()[0])):     #Calcul de la première ligne
+        for i in range(1, len(self.getSeq(0).getSequence())):     #Calcul de la première ligne
             m[i+1, 0] = m[i, 0] - e
             ix[i+1, 0] = ix[i, 0] - e
             iy[i+1, 0] = iy[i, 0] - e
             isfrom[i+1, 0] = 1
             
-        for j in range(1, len(bloc.getSeqs()[0])):     #Calcul de la première colonne
+        for j in range(1, len(bloc.getSeq(0).getSequence())):     #Calcul de la première colonne
             m[0, j+1] = m[0, j] - e
             ix[0, j+1] = ix[0, j] - e
             iy[0, j+1] = iy[0, j] - e
@@ -126,8 +132,8 @@ class bloc:
         
         index, maxi = [0,0], m[0][0]
         
-        for i in range(0, len(self.getSeqs()[0])):     #Relation de récurrence
-            for j in range(0, len(bloc.getSeqs()[0])):
+        for i in range(0, len(self.getSeq(0).getSequence())):     #Relation de récurrence
+            for j in range(0, len(bloc.getSeq(0).getSequence())):
                 
                 coli = self.getCol(i)
                 colj = bloc.getCol(j)

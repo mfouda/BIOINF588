@@ -1,38 +1,16 @@
 import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
-from blocs import bloc
-import random
-
-def autoGenSeq(num, size, percentage):
-    AA = ['G', 'P', 'A', 'V', 'L', 'I', 'M', 'C', 'F', 'Y', 'W', 'H', 'K', 'R', 'Q', 'N', 'E', 'D', 'S', 'T']
-    seqs = []
-    seqs += [Seq('')]
-    for i in range(0, size):
-        seqs[0] += AA[random.randint(0, 19)]
-    for k in range(1, num):
-            seqs += [Seq('')]
-            for i in range(0, size):
-                if(random.uniform(0, 1) < percentage):
-                    seqs[k] += seqs[0][i]
-                else:
-                    seqs[k] += AA[random.randint(0, 19)]
-                    
-    for k in range(0, num):
-        seqs[k] = bloc(seqs[k], 'seq'+str(k))
-        
-    return seqs    
+from blocs import bloc  
+from seqStruct import seqStruct
 
 def aligne_multiple(seqs, d, e):
     score_alignement = 0
     n = len(seqs)
     
-    if(type(seqs[0]) != type(bloc(Seq('')))):
-        list_blocs = []
-        for i in range (n) :
-            list_blocs += [bloc(seqs[i], 'seq'+str(i))]
-    else:
-        list_blocs = seqs
+    list_blocs = []
+    for i in range (n) :
+        list_blocs += [bloc(seqs[i])]
     del seqs
         
     scores = np.zeros((n, n))
@@ -42,7 +20,7 @@ def aligne_multiple(seqs, d, e):
         for j in range(i):
             scores[i, j] = list_blocs[i].alignementscore(list_blocs[j], d, e)
             
-    for i in range(n-1):
+    for i in range(0, n-1):
         #trouve le score maximal et les vecteurs qui le réalisent : x et y
         argmax = np.nanargmax(scores)
         x, y = argmax % n, argmax//n
@@ -61,24 +39,16 @@ def aligne_multiple(seqs, d, e):
         score_alignement += s
         
     return list_blocs[0]
-
-SEQS = autoGenSeq(10, 100, 0.62)
     
-#SEQS = [Seq('FEQWEKHAQYCHIVHMPDDFIVGRSNIPEKCHSLLKQCHAWIYANCIQAKGHQPLDQCETPLKPDNTWAQKYKCFVHIEKFIEFYHRSMVYHFGWCGEIC'),
-#        Seq('TEQHESHAQRAWKVHMPDDFIVGTSNIPKKYQVRLKQCHAWLYENCINGYCHLPGDSFEIVLAGDNGDSQEYLPFVHIGPFIEFRTRSMVYHCGWCGEIC'),
-#        Seq('FRGWILHKQYCHFVFMNNYFWVHAPRSPFKCHLLLKQKHAWPVANMIQAKAHQSLDQCFAPCKPDRTMQQKYKWFVHIEMHMEFYHESMPDHKGWFGEYC'),
-#        Seq('FEQWEHHATYCHGVHMFDDDTVGRHTIWEQNESLWSQCHDWIYAKPCQPRGHQPLDQGEELLKGDNTWAQKYKVTGAAVKQSEFRHRSMLAHFKGHGINC'),
-#        Seq('FEPSEKHAQYCHIWQMPDGFIYGNSNIPEQFRSWLKRHWAWITMNMITVEGVQGLYYQWTWAVDWLCWAQLYKIFVVIAPGPELDTREPVYHFMWCGEWR'),
-#        Seq('KESFEGGAENDCIFCMPDDRISNHSNIPAKCHSLLMQCHHPIYDYCINRKGHQPADQYENWLETDNTWAAKYKCFVHPYKILTFWGEAMVYHFGWCVEIC'),
-#        Seq('FEQWYKHAKYCHIVHMQDDFFVGRDEVPPKCHSLTLDNHAWIDPNCIQATGHKPEDRQVRPLKPDVTWAAKYKKKVYIRVFHSFTHRSMPRHFGWCGEIC'),
-#        Seq('FEQWEKHAQYVHIVHMQDGFIVFGYNIPQKCQSGLRLEHSWHYFNCIQSKGHQPRQACEDPLKDDNTVAQIYRIRVYIDKFIEFNHRSMGYHFYWKGEIC'),
-#        Seq('REQHHKHACYCHNEHANDDNICPHYNISECCHSELKQCHRRIYWNKKQGQMHFLLDQFETPLVPDNTTFQVYNMPVNIEGFIEFYHHHMVMVNSWCGTIC'),
-#        Seq('FEQIEDFAYYAHIVHMFDDFIGGRSVICKKCHSLRRQFHAWQRANCIRAKSEYPLAQCETPLKPDNTWAWGCKYNVHIEKKFEFYHYSMVYHTIWSGMIC')]
 
-#bloc1 = aligne_multiple([Seq("WWWAATCGTWWRTTCCTATATATCWWWTWTWWCTATCTACWWUWTWCTATZCTUAIYVWTCWA"),
-#                         Seq("WWWAATCGTWWRTTCCTATUUATATCWWWTWTWWCTATCTACWWUWTUUWCTATZCTUAIYVWTCWA"),
-#                         Seq("WWWAATCUGTWWRTTCCTATATATCWWWTWTWWCTUUUATCTACWWUWUUTWCTATZCTUAIYVWTCWA")],
-#                        11, 1)
+path = "2byg.pdb"
+seq1 = seqStruct(path)
+print(seq1.printSequence())
+seq2 = seq1.mutate(0.62)
+print(seq2.printSequence())
+print(seq1.getName(), seq2.getName())
+
+SEQS = [seq1, seq2]
 
 bloc1 = aligne_multiple(SEQS, 6, 1)
 bloc1.show()

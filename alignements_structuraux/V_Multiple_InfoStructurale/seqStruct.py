@@ -139,7 +139,7 @@ class seqStruct:
     def setName(self, name):
         self.name = name
     
-    def printSeq(self):
+    def printSequence(self):
         strseq = ""
         for i in range(0, len(self.getSequence())):
             strseq += self.getAminoAcid(i)["name"]
@@ -154,7 +154,7 @@ class seqStruct:
     def mutate(self, per):
         AA = ['G', 'P', 'A', 'V', 'L', 'I', 'M', 'C', 'F', 'Y', 'W', 'H', 'K', 'R', 'Q', 'N', 'E', 'D', 'S', 'T']
         seq = seqStruct()
-        for k in range(1, len(self.getSequence())):
+        for k in range(0, len(self.getSequence())):
             if(random.uniform(0, 1) < per):
                 seq.addAminoAcidAfter(self.getAminoAcid(k))
                 #seqs[k] += seqs[0][i]
@@ -163,10 +163,5 @@ class seqStruct:
                 aa["name"] = AA[random.randint(0, 19)]
                 seq.addAminoAcidAfter(aa)
                 #seqs[k] += AA[random.randint(0, 19)]
-        seq.setName(self.getName + "_mut" + str(random.randint(0, 100)))
+        seq.setName(self.getName() + "_mut" + str(random.randint(0, 100)))
         return seq
-        
-path = "2byg.pdb"
-seq = seqStruct(path)
-print(seq.getAminoAcid(2))
-print(seq.name)
