@@ -142,15 +142,24 @@ def aminoAcidComposition(path):
     return hist
 
 def histogramFromCompos(comps, labels):
+    plt.figure(figsize = (16, 8))
+    
+    delta = 3 * (np.linspace(0, 1, len(comps)) - [0.5]*len(comps)) / 4
+    print(delta)
+    
+    ymax = 0
     for i in range(0, len(comps)):
         comp = comps[i]
-        label= labels[i]
+        label = labels[i]
+        if(len(comps) != 1):
+            X = np.arange(len(comp)) + [delta[i] - i*0.75 / (2*(len(comps) - 1))]*20
+        else:
+            X = np.arange(len(comp))
+        plt.bar(X, comp.values(), align='edge', width = 0.75 / len(comps), label = label)
+        ymax = max(ymax, max(comp.values())*1.05)
         
-        X = np.arange(len(comp))
-        plt.bar(X, comp.values(), align='center', width=0.5, label = label, alpha = 0.5)
-        plt.xticks(X, comp.keys())
-        ymax = max(comp.values()) + 1
-        plt.ylim(0, ymax)
+    plt.ylim(0, ymax)  
+    plt.xticks(np.arange(20), comp.keys())
     plt.title("Amino acid composition")
     plt.xlabel("Amino acid")
     plt.ylabel("Proportion")
@@ -158,11 +167,11 @@ def histogramFromCompos(comps, labels):
     plt.show()
 
 ########## Executer Q2 ###########
-#path = "pickleObjects/dicoPLOOP_PROT.p"
-#histPLOOP_PROT = aminoAcidComposition(path)
-#path = "pickleObjects/dicoPROT.p"
-#histPROT = aminoAcidComposition(path)
-#histogramFromCompos([histPROT, histPLOOP_PROT], ["prot", "ploop_prot"])
+path = "pickleObjects/dicoPLOOP_PROT.p"
+histPLOOP_PROT = aminoAcidComposition(path)
+path = "pickleObjects/dicoPROT.p"
+histPROT = aminoAcidComposition(path)
+histogramFromCompos([histPROT, histPLOOP_PROT], ["prot","ploop_prot"])
 ##################################
 
 # 1.4/ Enzymes de restriction

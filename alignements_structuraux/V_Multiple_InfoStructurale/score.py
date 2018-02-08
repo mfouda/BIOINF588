@@ -47,8 +47,6 @@ class aminoAcidScorer:
         elif(aa2["name"] == '+'):
             return -self.getParams()["openGap"]
         
-
-        
         print("WARNING - Can't compute the score for", aa1, aa2, "in 'blosum62' function")
         print(aa1["name"] == '-', aa2["name"])
         return 0
