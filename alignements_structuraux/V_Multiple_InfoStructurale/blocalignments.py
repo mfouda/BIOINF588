@@ -50,5 +50,6 @@ for i in range(0, 10):
     
 print("")
 scorer1 = aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
 bloc1 = aligne_multiple(SEQS, scorer1)
 bloc1.show()
