@@ -43,6 +43,7 @@ Created on Thu Feb  8 14:47:55 2018
 
 from Bio import SeqIO
 import pickle as pk
+import numpy as np
 
 def fromFastaARNToPickleARN(path):
     fasta_sequences = SeqIO.parse(open(path),'fasta')
@@ -110,7 +111,7 @@ def findPloop(path):
     dicoPLOOP_PROT = dict()
     for k, v in dicoProt.items():
         if hasPloop(v):
-            dicoPLOOP_PROT[k] = len(v)
+            dicoPLOOP_PROT[k] = v
             
     return dicoPLOOP_PROT
 
@@ -123,12 +124,47 @@ def findPloop(path):
     
 # Question 2 : Histogramme de la composition en acide aminé des proteines à p-loop
     
-##TODO
-    
+import matplotlib.pyplot as plt
+from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
-
-##ENDTODO
+def aminoAcidComposition(path):
+    dicoProt = pk.load(open(path, "rb" ))
     
+    hist = dict()
+    for k, v in dicoProt.items():
+        hist_temp = ProteinAnalysis.get_amino_acids_percent(ProteinAnalysis(str(v)))
+        for key in hist_temp.keys():
+            if(key in hist):
+                hist[key] = hist[key] + 100 * hist_temp[key] / (float)(len(dicoProt))
+            else :
+                hist[key] = 100 * hist_temp[key] / (float)(len(dicoProt))
+    
+    return hist
+
+def histogramFromCompos(comps, labels):
+    for i in range(0, len(comps)):
+        comp = comps[i]
+        label= labels[i]
+        
+        X = np.arange(len(comp))
+        plt.bar(X, comp.values(), align='center', width=0.5, label = label, alpha = 0.5)
+        plt.xticks(X, comp.keys())
+        ymax = max(comp.values()) + 1
+        plt.ylim(0, ymax)
+    plt.title("Amino acid composition")
+    plt.xlabel("Amino acid")
+    plt.ylabel("Proportion")
+    plt.legend(loc = "best")
+    plt.show()
+
+########## Executer Q2 ###########
+#path = "pickleObjects/dicoPLOOP_PROT.p"
+#histPLOOP_PROT = aminoAcidComposition(path)
+#path = "pickleObjects/dicoPROT.p"
+#histPROT = aminoAcidComposition(path)
+#histogramFromCompos([histPROT, histPLOOP_PROT], ["prot", "ploop_prot"])
+##################################
+
 # 1.4/ Enzymes de restriction
 
 # Question 1 : Donner sites de restriction de certaines enzymes
