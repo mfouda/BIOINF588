@@ -32,7 +32,6 @@ class aminoAcidScorer:
                 return -self.getParams()["openGap"]
             elif(aa2["name"] != '-'):
                 return -self.getParams()["extendGap"]
-            print('hi there')
             return 0
         
         elif(aa2["name"] == '-'):
@@ -49,62 +48,27 @@ class aminoAcidScorer:
             return -self.getParams()["openGap"]
         
         print("WARNING - Can't compute the score for", aa1, aa2, "in 'blosum62' function")
-        print(aa1["name"] == '-', aa2["name"])
         return 0
 
     #on met des multiplicateurs qui dilatent cette affaire
     def croisementPremier(self, aa1, aa2):
-        blosumMatrix = Bio.SubsMat.MatrixInfo.blosum62
-        flag = False
-        result = 0
-        if ((aa1["name"], aa2["name"]) in blosumMatrix):
-            flag = True
-            result =  blosumMatrix[aa1["name"], aa2["name"]]
-
-        elif ((aa2["name"], aa1["name"]) in blosumMatrix):
-            flag = True
-            result = blosumMatrix[aa2["name"], aa1["name"]]
-
-        elif (aa1["name"] == '-'):
-            if (aa2["name"] == '+'):
-                flag = True
-                result = -self.getParams()["openGap"]
-            elif (aa2["name"] != '-'):
-                flag = True
-                result = -self.getParams()["extendGap"]
-
-        elif (aa2["name"] == '-'):
-            if (aa1["name"] == '+'):
-                flag = True
-                result = -self.getParams()["openGap"]
-            elif (aa1["name"] != '-'):
-                flag = True
-                result = -self.getParams()["extendGap"]
-
-
-        elif (aa1["name"] == '+'):
-            flag = True
-            result = -self.getParams()["openGap"]
-
-        elif (aa2["name"] == '+'):
-            flag = True
-            result = -self.getParams()["openGap"]
+        result_temp = self.blosum62(aa1, aa2)
 
         #ma petite modif
-        if flag:
-            coef1 = 1 - aa1["enfouissement"] + 0.5
-            coef2 = 1 - aa1["enfouissement"] + 0.5
-            coefmixte = 3 * (aa1["struct"] != aa2["struct"]) + 1
+        coef1 = 1 - aa1["enfouissement"] + 0.5
+        coef2 = 1 - aa1["enfouissement"] + 0.5
+        coefmixte = 3 * (aa1["struct"] != aa2["struct"]) + 1
 
-            return coef1*coef2*coefmixte*result
-        print(flag)
+        return coef1*coef2*coefmixte*result_temp
+    
         print("WARNING - Can't compute the score for", aa1, aa2, "in 'blosum62' function")
-        print(aa1["name"] == '-', aa2["name"])
         return 0
             
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
             return self.blosum62(aa1, aa2)
+        
         if (self.getName() == "blosum62mixte"):
             return self.croisementPremier(aa1, aa2)
+        
         return 0
