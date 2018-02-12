@@ -169,7 +169,8 @@ class bloc:
         minus["struct"], plus["struct"] = "", ""
         minus["enfouissement"], plus["enfouissement"] = 0, 0
                         
-        while(0 not in index):
+        #while(0 not in index):
+        while(index != [0, 0]):
             if(isfrom.item(tuple(index)) == 0):
                 index = [index[0] - 1, index[1] - 1]
                 for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):

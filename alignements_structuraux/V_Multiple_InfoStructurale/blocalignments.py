@@ -43,13 +43,13 @@ def aligne_multiple(seqs, scorer):
 
 path = "2byg.pdb"
 seq = seqStruct(path)
-
+print(seq.getLength())
 SEQS = [seq]
-for i in range(0, 10):
-    SEQS += [SEQS[0].mutate(0.8)]
-    
+SEQS += [SEQS[0].mutate(0.5)]
+for i in range(0, len(SEQS)):
+    print(SEQS[i].toString())
 print("")
-scorer1 = aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+scorer1 = aminoAcidScorer("blosum62", dict({"openGap" : 2, "extendGap" : 1}))
 scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-bloc1 = aligne_multiple(SEQS, scorer2)
+bloc1 = aligne_multiple(SEQS, scorer1)
 bloc1.show()
