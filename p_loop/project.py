@@ -256,8 +256,6 @@ def findRestrictionSites(pathARN, pathPLOOP_PROT):
 # 2/ Analyse de séquence et structure 3D
     
 # Question 1 : Télécharger fichier PDB a partir du code
-    
-import urllib.request as urllib
 
 def downloadPDBFromName(name):
     path = "https://files.rcsb.org/download/" + name + ".pdb"

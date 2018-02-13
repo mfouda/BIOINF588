@@ -41,7 +41,7 @@ def aligne_multiple(seqs, scorer):
     return list_blocs[0]
     
 
-path = "2byg.pdb"
+path = "pdb/2byg.pdb"
 seq = seqStruct(path)
 SEQS = [seq]
 for i in range(0, 3):
