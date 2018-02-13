@@ -27,6 +27,12 @@ class aminoAcidScorer:
         elif((aa2["name"], aa1["name"]) in blosumMatrix):
             return blosumMatrix[aa2["name"], aa1["name"]]
         
+        elif(aa1["name"] == '+'):
+            return -self.getParams()["openGap"]
+        
+        elif(aa2["name"] == '+'):
+            return -self.getParams()["openGap"]
+        
         elif(aa1["name"] == '-'):
             if(aa2["name"] == '+'):
                 return -self.getParams()["openGap"]
@@ -41,12 +47,6 @@ class aminoAcidScorer:
                 return -self.getParams()["extendGap"]
             return 0
             
-        elif(aa1["name"] == '+'):
-            return -self.getParams()["openGap"]
-        
-        elif(aa2["name"] == '+'):
-            return -self.getParams()["openGap"]
-        
         print("WARNING - Can't compute the score for", aa1, aa2, "in 'blosum62' function")
         return 0
 

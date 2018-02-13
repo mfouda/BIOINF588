@@ -96,34 +96,32 @@ class bloc:
         #iy = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         #isfrom = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         
-        minus, plus = dict(), dict()
-        minus["name"], plus["name"] = "-", "+"
-        minus["struct"], plus["struct"] = "", ""
-        minus["enfouissement"], plus["enfouissement"] = 0, 0
+        minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
+        plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
         
         ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
         db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
-        m[1, 0] = -ds
-        m[0, 1] = -db
-        ix[1, 0] = -ds
-        ix[0, 1] = -db
-        iy[1, 0] = -ds
-        iy[0, 1] = -db
+        m[1, 0] = ds
+        m[0, 1] = db
+        ix[1, 0] = ds
+        ix[0, 1] = db
+        iy[1, 0] = ds
+        iy[0, 1] = db
         isfrom[0, 1] = -1
         isfrom[1, 0] = 1
         
         for i in range(1, self.getSeq(0).getLength()):     #Calcul de la première ligne
             e = self.aminoAcidScore(self.getCol(i), [minus], scorer)
-            m[i+1, 0] = m[i, 0] - e
-            ix[i+1, 0] = ix[i, 0] - e
-            iy[i+1, 0] = iy[i, 0] - e
+            m[i+1, 0] = m[i, 0] + e
+            ix[i+1, 0] = ix[i, 0] + e
+            iy[i+1, 0] = iy[i, 0] + e
             isfrom[i+1, 0] = 1
             
         for j in range(1, bloc.getSeq(0).getLength()):     #Calcul de la première colonne
             e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
-            m[0, j+1] = m[0, j] - e
-            ix[0, j+1] = ix[0, j] - e
-            iy[0, j+1] = iy[0, j] - e
+            m[0, j+1] = m[0, j] + e
+            ix[0, j+1] = ix[0, j] + e
+            iy[0, j+1] = iy[0, j] + e
             isfrom[0, j+1] = -1
         
         index, maxi = [0,0], m[0][0]
@@ -144,8 +142,12 @@ class bloc:
                     index = [i+1, j+1]
                 
                 #Calcul de ix[i+1, j+1] et iy[i+1, j+1]
-                ix[i+1, j+1] = max(m[i, j + 1] - scorer.getParams()["openGap"], ix[i, j + 1] - scorer.getParams()["extendGap"])
-                iy[i+1, j+1] = max(m[i + 1, j] - scorer.getParams()["openGap"], iy[i + 1, j] - scorer.getParams()["extendGap"])
+                #ix[i+1, j+1] = max(m[i, j + 1] - scorer.getParams()["openGap"], ix[i, j + 1] - scorer.getParams()["extendGap"])
+                #iy[i+1, j+1] = max(m[i + 1, j] - scorer.getParams()["openGap"], iy[i + 1, j] - scorer.getParams()["extendGap"])
+                ix[i+1, j+1] = max(m[i, j + 1] + self.aminoAcidScore(coli, [plus], scorer),
+                                  ix[i, j + 1] + self.aminoAcidScore(coli, [minus], scorer))
+                iy[i+1, j+1] = max(m[i + 1, j] + self.aminoAcidScore(colj, [plus], scorer),
+                                  iy[i + 1, j] + self.aminoAcidScore(colj, [minus], scorer))
                 
                 #Calcul de isfrom[i+1, j+1]
                 isfromij = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
@@ -155,20 +157,33 @@ class bloc:
         
     def add(self, bloc, scorer):
         maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
+
+        minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
+        plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
         
         seqs = []
         for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
             seqs += [seqStruct()]
             if(i < self.getNbSeqs()):
                 seqs[-1].setName(self.getSeq(i).getName())
+                for k in range(index[0] + 1, self.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(self.getSeq(i).getAminoAcid(k))
+                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(minus)
+                
             else:
                 seqs[-1].setName(bloc.getSeq(i - self.getNbSeqs()).getName())
+                for k in range(index[0] + 1, self.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(minus)
+                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(bloc.getSeq(i - self.getNbSeqs()).getAminoAcid(k))
         
-        minus, plus = dict(), dict()
-        minus["name"], plus["name"] = "-", "+"
-        minus["struct"], plus["struct"] = "", ""
-        minus["enfouissement"], plus["enfouissement"] = 0, 0
-                        
+        minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
+        plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
+        
+        #Rajouter la suite des séquences
+        
+        
         #while(0 not in index):
         while(index != [0, 0]):
             if(isfrom.item(tuple(index)) == 0):
@@ -202,10 +217,10 @@ class bloc:
                         #seqs[i] = bloc.getSeq(i - self.getNbSeqs())[index[1]] + seqs[i]         
         
         for i in range(0, len(seqs)):
-            if(seqs[i].getAminoAcid(0)["name"] == '-'):
-                seqs[i].setAminoAcid(0, plus)
+#            if(seqs[i].getAminoAcid(0)["name"] == '-'):
+#                seqs[i].setAminoAcid(0, plus)
                 #seqs[i] = '+' + seqs[i][1:]
-            for k in range(0, seqs[0].getLength()-1):
+            for k in range(0, seqs[i].getLength()-1):
                 if(seqs[i].getAminoAcid(k+1)["name"] == '+' and (seqs[i].getAminoAcid(k)["name"] == '+' or seqs[i].getAminoAcid(k)["name"] == '-')):
                     seqs[i].setAminoAcid(k+1, minus)
                     #seqs[i] = seqs[i][:k+1] + '-' + seqs[i][k+2:]

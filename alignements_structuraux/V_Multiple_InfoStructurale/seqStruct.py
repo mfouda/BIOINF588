@@ -74,6 +74,7 @@ def get_seq(path):
     structure = parser.get_structure(path, path)
     
     seq = dict()
+    maxenf = 1e-10
     
     for model in structure:
         for chain in model:
@@ -91,6 +92,8 @@ def get_seq(path):
                     bary_res /= num_atom
                     #aminoacid["bary_res"] = bary_res
                     aminoacid["enfouissement"] = sum((bary_res - dico["baryres"])**2)**0.5
+                    if(aminoacid["enfouissement"] > maxenf):
+                        maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
                     seq[get_num(residue)] = aminoacid
     
@@ -107,7 +110,10 @@ def get_seq(path):
             end = int(line[34:37])
             for i in range(start, end+1):
                 seq[i]["struct"] = "F"
-
+    
+    for key in seq.keys():
+        seq[key]["enfouissement"] = 1 - seq[key]["enfouissement"] / maxenf
+    
     return seq
 
 
@@ -160,12 +166,17 @@ class seqStruct:
     def mutate(self, per):
         AA = ['G', 'P', 'A', 'V', 'L', 'I', 'M', 'C', 'F', 'Y', 'W', 'H', 'K', 'R', 'Q', 'N', 'E', 'D', 'S', 'T']
         seq = seqStruct()
+        hasDeletedBefore = False
         for k in range(0, len(self.getSequence())):
-            if(random.uniform(0, 1) < per):
-                seq.addAminoAcidAfter(self.getAminoAcid(k))
+            if(random.uniform(0, 1) > ((hasDeletedBefore + 1)*(1-per))**2):
+                if(random.uniform(0, 1) < per):
+                    seq.addAminoAcidAfter(self.getAminoAcid(k).copy())
+                else:
+                    aa = (self.getAminoAcid(k)).copy()
+                    aa["name"] = AA[random.randint(0, 19)]
+                    seq.addAminoAcidAfter(aa)
+                hasDeletedBefore = False
             else:
-                aa = (self.getAminoAcid(k)).copy()
-                aa["name"] = AA[random.randint(0, 19)]
-                seq.addAminoAcidAfter(aa)
+                hasDeletedBefore = True
         seq.setName(self.getName() + "_mut" + str(random.randint(0, 10000)))
         return seq
