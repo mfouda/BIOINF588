@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Feb  8 14:47:55 2018
-
 @author: romai
 """
 
@@ -12,32 +11,56 @@ Created on Thu Feb  8 14:47:55 2018
 # 1/ Détection de signatures sur un génome complet
 # 1.1/ Identification du motif
 
-# Question 1 : Fonction qui télécharge un fichier, répondu à la main sur google
+# Question 1 : Fonction qui télécharge un fichier
 
-##TODO
+import urllib.request as urllib
 
+def downloadPrositeData(path):
+    urllib.urlretrieve(path, "data/prosite.dat")
+    
+########## Executer Q1 ###########
+#path = "ftp://ftp.expasy.org/databases/prosite/prosite.dat"
+#downloadPrositeData(path)
+##################################
 
+# Question 2 : Recherche du motif du p-loop dans le fichier
 
-##ENDTODO
+from itertools import product
 
-# Question 2 : Recherche du motif du p-loop dans le fichier, revient a faire un
-#ctrl + f dans le fichier
+def findSomethingInFile(path, smthg):
+    lines = open(path, "r").readlines()
+    
+    L = [(c, c.upper()) if not c.isdigit() else (c,) for c in smthg.lower()]
+    L = ["".join(item) for item in product(*L)]
+    
+    for i in range(0, len(lines)):
+        find = False
+        for l in L:
+            if(lines[i].find(l) != -1):
+                find = True
+        if(find):
+            print(lines[i], lines[i+1])
 
-##TODO
-
-
-
-##ENDTODO
+########## Executer Q2 ###########
+#path = "data/prosite.dat"
+#findSomethingInFile(path, "p-loop")
+##################################
 
 # 1.2/ Lecture du format FASTA
 
-# Question 1 : Fonction qui télécharge un fichier fasta, répondu à la main sur google
+# Question 1 : Fonction qui télécharge un fichier fasta
 
-##TODO
+import gzip as gzip
 
-
-
-##ENDTODO
+def downloadFasta(path, dest):
+    urllib.urlretrieve(path, dest+".gz")
+    f = gzip.open(dest+".gz", 'rb')
+    pk.dump(f.read(), open( dest, "wb" ) )
+    
+########## Executer Q1 ###########
+#path = "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_dna/orf_coding_all.fasta.gz"
+#downloadFasta(path, "data/orf_coding_all.fasta")
+##################################
 
 # Question 2 : Lire FASTA puis stocker au format approprié
 
@@ -68,7 +91,7 @@ from Bio.Seq import Seq
 from Bio.Alphabet import generic_rna
 
 def fromPickleARNtoPickleProtein(path):
-    dicoARN = pk.load(open( "dicoARN.p", "rb" ))
+    dicoARN = pk.load(open( path, "rb" ))
     
     dicoPROT = dict()
     for k, v in dicoARN.items():
@@ -85,12 +108,32 @@ def fromPickleARNtoPickleProtein(path):
 
 # Question 4 : Comparer le fichier obtenu avec un autre fichier
 
-##TODO
+def comparePickleWithFasta(picklePath, fastaPath):
+    print("Comparing the two files ...")
+    fasta_sequences = SeqIO.parse(open(fastaPath),'fasta')
+    dicoPROT = pk.load(open( picklePath, "rb" ))
+    
+    areEquals = True
+    for fasta in fasta_sequences:
+        name, sequence = fasta.id, str(fasta.seq)
+        if(dicoPROT[name] != sequence):
+            areEquals = False
+            print(dicoPROT[name], sequence)
+            print("")
+            
+    if(areEquals):
+        print("Les deux fichiers sont égaux")
+    else:
+        print("Les deux fichiers sont différents")
+    
 
 
-
-##ENDTODO
-
+########## Executer Q3 ###########
+path = "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/orf_trans_all.fasta.gz"
+downloadFasta(path, "data/orf_trans_all.fasta")
+comparePickleWithFasta("pickleObjects/dicoPROT.p", "data/orf_trans_all.fasta")
+##################################
+    
 # 1.3/ Identification des protéines à p-loop
 
 # Question 1 : Recherche des p-loops
@@ -145,7 +188,6 @@ def histogramFromCompos(comps, labels):
     plt.figure(figsize = (16, 8))
     
     delta = 3 * (np.linspace(0, 1, len(comps)) - [0.5]*len(comps)) / 4
-    print(delta)
     
     ymax = 0
     for i in range(0, len(comps)):
@@ -167,11 +209,11 @@ def histogramFromCompos(comps, labels):
     plt.show()
 
 ########## Executer Q2 ###########
-path = "pickleObjects/dicoPLOOP_PROT.p"
-histPLOOP_PROT = aminoAcidComposition(path)
-path = "pickleObjects/dicoPROT.p"
-histPROT = aminoAcidComposition(path)
-histogramFromCompos([histPROT, histPLOOP_PROT], ["prot","ploop_prot"])
+#path = "pickleObjects/dicoPLOOP_PROT.p"
+#histPLOOP_PROT = aminoAcidComposition(path)
+#path = "pickleObjects/dicoPROT.p"
+#histPROT = aminoAcidComposition(path)
+#histogramFromCompos([histPROT, histPLOOP_PROT], ["prot","ploop_prot"])
 ##################################
 
 # 1.4/ Enzymes de restriction
