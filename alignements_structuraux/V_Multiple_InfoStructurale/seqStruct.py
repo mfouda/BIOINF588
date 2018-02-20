@@ -86,7 +86,6 @@ def get_seq(path):
                     bary_res = [0, 0, 0]
                     num_atom = 0
                     for atom in residue:
-                        dico['num Atom'] += 1
                         bary_res += atom.get_coord()
                         num_atom += 1
                     bary_res /= num_atom
@@ -95,6 +94,7 @@ def get_seq(path):
                     if(aminoacid["enfouissement"] > maxenf):
                         maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
+                    aminoacid["id"] = get_num(residue)
                     seq[get_num(residue)] = aminoacid
     
     lines = open(path, "r").readlines()

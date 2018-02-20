@@ -7,6 +7,7 @@ Created on Tue Feb 13 16:19:10 2018
 
 # On importe Tkinter
 import tkinter as tk
+import tkinter.filedialog as tkfd
 #import random as random
 import numpy as np
 import datetime
@@ -147,6 +148,25 @@ def launchInterface():
     def Effacer():
         """ Efface la zone graphique """
         logger.delete(tk.ALL)
+        
+    def useTFA():
+        global SEQS, params
+        filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .tfa", filetypes=[('tfa files','.tfa'),('all files','.*')])
+        print(filename)
+        
+        log(logs, "Recherche de séquences dans le .tfa")
+        SEQS = []
+        lines = open(filename, 'r').readlines()
+        lines = [lines[i][:-2] for i in range(0, len(lines))]
+        #.split("<")
+        print(lines)
+#        for i in range(0, int(nM.get())):
+#            SEQS += [SEQS[0].mutate(float(Mtx.get()))]
+            
+        params = dict()
+        ButtonA['state'] = 'normal'
+        ButtonAps['state'] = 'normal'
+        showSEQS(SEQS)
     
     def log(logs, s):
         Effacer()
@@ -157,20 +177,22 @@ def launchInterface():
             
     def showP():
         global SEQS
-        log(logs, "Protéine "+str(strPName.get())+" initialisée")
         getP()
         SEQS = [seqStruct("pdb/" + strPName.get() + ".pdb")]
         ButtonM['state'] = 'normal'
+        log(logs, "Protéine "+str(strPName.get())+" initialisée")
         showProtein(strPName.get())
         
     def getP():
         if(strPName.get() + ".pdb" not in os.listdir("pdb/")):
+            log(logs, "Downloading " + strPName.get() + ".pdb ...")
             path = "https://files.rcsb.org/download/" + strPName.get() + ".pdb"
             urllib.urlretrieve(path, "pdb/" + strPName.get() + ".pdb")
+        else:
+            log(logs, "Protein " + strPName.get() + ".pdb already downloaded before")
             
     def mutate():
-        global SEQS
-        global params
+        global SEQS, params
         log(logs, "Mutation "+str(nM.get())+" fois avec "+Mtx.get()+"% de similitude")
         for i in range(0, int(nM.get())):
             SEQS += [SEQS[0].mutate(float(Mtx.get()))]
@@ -190,7 +212,7 @@ def launchInterface():
         params["openGap"] = float(oG.get())
         params["extendGap"] = float(eG.get())
         scorer = aminoAcidScorer(str(sName.get()), params)
-        log(logs, "scorer : "+scorer.getName() + " "+str(scorer.getParams()))
+        log(logs, "scorer : " + scorer.getName() + " " + str(scorer.getParams()))
         log(logs, "Alignement des séquences en cours ...")
         bloc = aligne_multiple(SEQS, scorer)
         showBloc(bloc)
@@ -211,13 +233,17 @@ def launchInterface():
     ButtonP = tk.Button(FramePName,text="Afficher la proteine",fg='navy',command=showP)
     ButtonP.pack(padx=2,pady=2)
     
+    ButtonTFA = tk.Button(FramePName,text="Utiliser .tfa",fg='navy',command=useTFA)
+    ButtonTFA.pack(padx=2,pady=2)
+    
+    
     #Widget Mutation
     FrameM = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
     FrameM.pack(side=tk.LEFT,padx=2,pady=2)
     LabelM = tk.Label(FrameM,text="Taux de mutation et nombre de mutants")
     LabelM.pack(padx=2,pady=2)
     Mtx = tk.StringVar()
-    Mtx.set(0.8)
+    Mtx.set(0.62)
     TextVarM = tk.Entry(FrameM, textvariable=Mtx, width=10)
     TextVarM.pack(padx=2,pady=2)
     nM = tk.StringVar()
