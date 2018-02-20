@@ -42,7 +42,7 @@ def get_info(path):
     dico['num Chain'] = 0
     dico['num Residue'] = 0
     dico['num Atom'] = 0
-
+    dico["res0"] = 2147483647
     baryres = [0, 0, 0]
     baryatm = [0, 0, 0]
     for model in structure:
@@ -50,7 +50,9 @@ def get_info(path):
         for chain in model:
             dico['num Chain'] += 1
             for residue in chain:
-                if(residue.get_resname() != "HOH"):
+                if(residue.get_resname() != "HOH" and residue.get_resname()[0] != " "):
+                    if(get_num(residue) < dico["res0"]):
+                        dico["res0"] = get_num(residue)
                     dico['num Residue'] += 1
                     #print("Amino acid", get_num(residue), convert_name_AA(residue.get_resname()))
                     bary_res = [0, 0, 0]
@@ -79,14 +81,13 @@ def get_seq(path):
     for model in structure:
         for chain in model:
             for residue in chain:
-                if(residue.get_resname() != "HOH"):
+                if(residue.get_resname() != "HOH" and residue.get_resname()[0] != " "):
                     aminoacid = dict()
                     aminoacid["name"] = convert_name_AA(residue.get_resname())
                     
                     bary_res = [0, 0, 0]
                     num_atom = 0
                     for atom in residue:
-                        dico['num Atom'] += 1
                         bary_res += atom.get_coord()
                         num_atom += 1
                     bary_res /= num_atom
@@ -95,6 +96,7 @@ def get_seq(path):
                     if(aminoacid["enfouissement"] > maxenf):
                         maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
+                    aminoacid["id"] = get_num(residue) - dico["res0"]
                     seq[get_num(residue)] = aminoacid
     
     lines = open(path, "r").readlines()

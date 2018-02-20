@@ -44,6 +44,8 @@ def aligne_multiple(seqs, scorer):
 #path = "pdb/2byg.pdb"
 #seq = seqStruct(path)
 #SEQS = [seq]
+#for i in range(0, seq.getLength()):
+#    print(seq.getAminoAcid(i))
 #for i in range(0, 3):
 #    SEQS += [SEQS[0].mutate(0.8)]
 #    

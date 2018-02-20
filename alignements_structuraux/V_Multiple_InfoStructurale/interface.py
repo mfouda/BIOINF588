@@ -7,6 +7,7 @@ Created on Tue Feb 13 16:19:10 2018
 
 # On importe Tkinter
 import tkinter as tk
+import tkinter.filedialog as tkfd
 #import random as random
 import numpy as np
 import datetime
@@ -147,6 +148,29 @@ def launchInterface():
     def Effacer():
         """ Efface la zone graphique """
         logger.delete(tk.ALL)
+        
+    def useTFA():
+        global SEQS, params
+        filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .tfa", filetypes=[('tfa files','.tfa'),('all files','.*')])
+        
+        log(logs, "Recherche de séquences dans le .tfa")
+        SEQS = []
+        lines = open(filename, 'r').readlines()
+        #lines = [lines[i][:-2] for i in range(0, len(lines))]
+        for line in lines:
+            if(line[0] == ">"):
+                if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
+                    log(logs, "Downloading " + line[1:5] + ".pdb ...")
+                    path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
+                    urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
+                else:
+                    log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
+                SEQS += [seqStruct("pdb/" + line[1:5] + ".pdb")]
+            
+        params = dict()
+        ButtonA['state'] = 'normal'
+        ButtonAps['state'] = 'normal'
+        showSEQS(SEQS)
     
     def log(logs, s):
         Effacer()
@@ -157,20 +181,22 @@ def launchInterface():
             
     def showP():
         global SEQS
-        log(logs, "Protéine "+str(strPName.get())+" initialisée")
         getP()
         SEQS = [seqStruct("pdb/" + strPName.get() + ".pdb")]
         ButtonM['state'] = 'normal'
+        log(logs, "Protéine "+str(strPName.get())+" initialisée")
         showProtein(strPName.get())
         
     def getP():
         if(strPName.get() + ".pdb" not in os.listdir("pdb/")):
+            log(logs, "Downloading " + strPName.get() + ".pdb ...")
             path = "https://files.rcsb.org/download/" + strPName.get() + ".pdb"
             urllib.urlretrieve(path, "pdb/" + strPName.get() + ".pdb")
+        else:
+            log(logs, "Protein " + strPName.get() + ".pdb already downloaded before")
             
     def mutate():
-        global SEQS
-        global params
+        global SEQS, params
         log(logs, "Mutation "+str(nM.get())+" fois avec "+Mtx.get()+"% de similitude")
         for i in range(0, int(nM.get())):
             SEQS += [SEQS[0].mutate(float(Mtx.get()))]
@@ -190,7 +216,7 @@ def launchInterface():
         params["openGap"] = float(oG.get())
         params["extendGap"] = float(eG.get())
         scorer = aminoAcidScorer(str(sName.get()), params)
-        log(logs, "scorer : "+scorer.getName() + " "+str(scorer.getParams()))
+        log(logs, "scorer : " + scorer.getName() + " " + str(scorer.getParams()))
         log(logs, "Alignement des séquences en cours ...")
         bloc = aligne_multiple(SEQS, scorer)
         showBloc(bloc)
@@ -211,13 +237,17 @@ def launchInterface():
     ButtonP = tk.Button(FramePName,text="Afficher la proteine",fg='navy',command=showP)
     ButtonP.pack(padx=2,pady=2)
     
+    ButtonTFA = tk.Button(FramePName,text="Utiliser .tfa",fg='navy',command=useTFA)
+    ButtonTFA.pack(padx=2,pady=2)
+    
+    
     #Widget Mutation
     FrameM = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
     FrameM.pack(side=tk.LEFT,padx=2,pady=2)
     LabelM = tk.Label(FrameM,text="Taux de mutation et nombre de mutants")
     LabelM.pack(padx=2,pady=2)
     Mtx = tk.StringVar()
-    Mtx.set(0.8)
+    Mtx.set(0.62)
     TextVarM = tk.Entry(FrameM, textvariable=Mtx, width=10)
     TextVarM.pack(padx=2,pady=2)
     nM = tk.StringVar()
@@ -232,30 +262,40 @@ def launchInterface():
     FrameS = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
     FrameS.pack(side=tk.LEFT,padx=2,pady=2)
     LabelS= tk.Label(FrameS,text="Scorer")
-    LabelS.pack(padx=2,pady=2)
+    LabelS.pack(side = tk.TOP, padx=2,pady=2)
     sName = tk.StringVar()
     sName.set("blosum62")
-    TextVarsName = tk.Entry(FrameS, textvariable=sName, width=10)
-    TextVarsName.pack(padx=2,pady=2)
+    TextVarsName = tk.Entry(FrameS, textvariable=sName, width=20)
+    TextVarsName.pack(side = tk.TOP, padx=2,pady=2)
+    
+    FrameSS = tk.Frame(FrameS,borderwidth=1)
+    FrameSS.pack(padx=2,pady=2)
     oG = tk.StringVar()
-    oG.set(6)
-    TextVaroG = tk.Entry(FrameS, textvariable=oG, width=10)
-    TextVaroG.pack(padx=2,pady=2)
+    oG.set(11)
+    TextVaroG = tk.Entry(FrameSS, textvariable=oG, width=10)
+    #TextVaroG.pack(padx=2,pady=2)
+    TextVaroG.grid(row =1, column =0, padx=1,pady=1)
     eG = tk.StringVar()
     eG.set(1)
-    TextVareG = tk.Entry(FrameS, textvariable=eG, width=10)
-    TextVareG.pack(padx=2,pady=2)
+    TextVareG = tk.Entry(FrameSS, textvariable=eG, width=10)
+    #TextVareG.pack(padx=2,pady=2)
+    TextVareG.grid(row =1, column =1, padx=1,pady=1)
+    tk.Label(FrameSS, text = 'Open gap').grid(row =0, column =0, padx=1,pady=1)
+    tk.Label(FrameSS, text = 'Extend gap').grid(row =0, column =1, padx=1,pady=1)
     
     FrameAps = tk.Frame(FrameS,borderwidth=2,relief=tk.GROOVE)
     FrameAps.pack(padx=2,pady=2)
+    
+    FrameApss = tk.Frame(FrameAps,borderwidth=2)
+    FrameApss.pack(padx=2,pady=2)
     key = tk.StringVar()
     key.set("key")
-    TextVarkey = tk.Entry(FrameAps, textvariable=key, width=10)
-    TextVarkey.pack(padx=2,pady=2)
+    TextVarkey = tk.Entry(FrameApss, textvariable=key, width=10)
+    TextVarkey.grid(row =0, column =0, padx=1,pady=1)
     value = tk.StringVar()
     value.set(1)
-    TextVarvalue = tk.Entry(FrameAps, textvariable=value, width=10)
-    TextVarvalue.pack(padx=2,pady=2)
+    TextVarvalue = tk.Entry(FrameApss, textvariable=value, width=10)
+    TextVarvalue.grid(row =0, column =1, padx=1,pady=1)
     ButtonAps = tk.Button(FrameAps,text="Add parameter",fg='navy',command=addParams, state=tk.DISABLED)
     ButtonAps.pack(padx=2,pady=2)
     
