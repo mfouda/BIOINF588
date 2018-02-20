@@ -168,10 +168,6 @@ def launchInterface():
                 else:
                     log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
                 SEQS += [seqStruct("pdb/" + line[1:5] + ".pdb")]
-        #.split("<")
-        #print(lines)
-#        for i in range(0, int(nM.get())):
-#            SEQS += [SEQS[0].mutate(float(Mtx.get()))]
             
         params = dict()
         ButtonA['state'] = 'normal'

@@ -51,7 +51,7 @@ def get_info(path):
         for chain in model:
             dico['num Chain'] += 1
             for residue in chain:
-                if(residue.get_resname() != "HOH"):
+                if(residue.get_resname() != "HOH" and residue.get_resname()[0] != " "):
                     if(get_num(residue) < dico["res0"]):
                         dico["res0"] = get_num(residue)
                     dico['num Residue'] += 1
@@ -82,7 +82,7 @@ def get_seq(path):
     for model in structure:
         for chain in model:
             for residue in chain:
-                if(residue.get_resname() != "HOH"):
+                if(residue.get_resname() != "HOH" and residue.get_resname()[0] != " "):
                     aminoacid = dict()
                     aminoacid["name"] = convert_name_AA(residue.get_resname())
                     
