@@ -155,17 +155,49 @@ def launchInterface():
         filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .msf", filetypes=[('msf files','.msf'),('all files','.*')])
         log(logs, "Ouverture d'un .msf et comparaison ...")
         lines = open(filename, 'r').readlines()
-        names = bloc.getNames()
-        print(names)
+        
+        names = []
+        i = 6
+        while(lines[i][:5] == ' Name'):
+            names += [lines[i][7:11]]
+            i += 1
+        
         SEQSmsf = []
+        last = dict()
         for i in range(0, len(names)):
             SEQSmsf += [seqStruct()]
             SEQSmsf[-1].setName(names[i])
-            
+            last[names[i]] = 0
+        
         for line in lines:
             if(line[:4] in names):
-                print(line[:4])
-                print(names.index(line[:4]))
+                index = names.index(line[:4])
+                words = line.split()
+                for word in words[1:] :
+                    for aa in word :
+                        d = dict()
+                        d["name"] = aa
+                        d["struct"] = "V"
+                        if(aa != "."):
+                            d["id"]=last[line[:4]]
+                            last[line[:4]] += 1
+                        else:
+                            d["name"] = "-"
+                        SEQSmsf[index].addAminoAcidAfter(d)
+                        
+        for i in range(0, len(SEQSmsf)):
+            seq = seqStruct("pdb/" + SEQSmsf[i].getName() + ".pdb")
+            n = 0
+            for k in range(0, SEQSmsf[i].getLength()):
+                if("id" in SEQSmsf[i].getAminoAcid(k)):
+                    aa = SEQSmsf[i].getAminoAcid(k).copy()
+                    aaseq = seq.getAminoAcid(n).copy()
+                    aa["struct"] = aaseq["struct"]
+                    aa["enfouissement"] = aaseq["enfouissement"]
+                    SEQSmsf[i].setAminoAcid(k, aa)
+                    n += 1
+        
+        showSEQS(SEQSmsf)
         
     def useTFA():
         global SEQS, params
