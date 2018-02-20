@@ -1,0 +1,64 @@
+S I T L D L V N P T A G Q Y S S F V D K I R N N V K D P + - N L K Y G G T D I A V I G P P S K E K F L R + I N F Q + S S R G T V + S + - L G 
+E F T L D F + - S T A K T Y V D S L N V I R S A I G T P L Q T I S S G G T S L L M I + - - D D N L F A V D V R G I D P E E G R F N N L R L I 
+N I V F D V E N A T P E T Y S N F L T S L R E A V X D X + - K L T C H G M I M A T T L T E Q P X + Y V L + V D L X + F G S G T F + T + - L A 
+D V S F R L S G A T S S S Y G V F I S N L R K A L P N E + - R + K L Y D I P L L R S S L P G S Q R Y A L + I H L T N Y A D E T I + S + - V A 
+
+S I T L D L V N P T A G Q Y S S F V D K I R N N V K D P + - N L K Y G G T D I A V I G P P + - S K E K F L R I N F Q S + - - - - - S R G T V 
+E F T L D F + - S T A K T Y V D S L N V I R S A I G T P L Q T I S S G G T S L L M I D + - - - - - D N L F A V D V R G I D P E E G R F N N L 
+N I V F D V E N A T P E T Y S N F L T S L R E A V X D X + - K L T C H G + - M I M A T T L + T E Q P X Y V L V D L X + - - - - - F G S G T F 
+D V S F R L S G A T S S S Y G V F I S N L R K A L P N E + - R K L Y + - - D I P L L R S S L P G S Q R Y A L I H L T N Y + - - - - A D E T I 
+
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+
+
+L K R D N L Y V V A Y L A M D N T N V N R A Y Y F K S E I T S A E L T A L F P + - E A T T A N Q K + A L E Y T E D Y Q S I E K N A Q I T Q G 
+V E R N N L Y V T G F + - - V + N R T N N V F Y R F A D F S H V + - T + - F P + - - - - - G T T A V T L S G D S S Y T T L Q R + - - - V + A 
+I R R G N L Y L E G Y S D I Y N G K C R Y R I F X D S E + S D A Q E T + V C P G D K S K P G T Q N + N I P Y E X S Y K G M E + - - - - S K G 
+I D V T N V Y I M G Y R A + - - G D T + - S + Y F F N E + A S A T E A A K Y V F + - - K D A M R K V T L P Y S G N Y + - - E R L + Q + T A A 
+
+S L G L K R D N L Y V V A Y L A M D N T N V N R A Y Y F K S + E I T S A E L T A L F P E + - A T T A N Q K A L E Y T E D Y Q S I E K N A Q I 
+R L I V E R N N L Y V T G F V N R T + - - - N N V F Y R F + - - - - A D F S H V T F P G + - - - - T T A V T L S G D S S Y T T L Q R V A G I 
+T L A I R R G N L Y L E G Y S D I Y N + - - G K C R Y R I F X D S E S D A Q E T V C P G D K S K P G T Q N N I P Y E X S Y K G M E S K G G + 
+S V A I D V T N V Y I M G Y R A G + - - - - D T S Y F F N E + A S A T E A A K Y V F K D + - - - A M R K V T L P Y S G N Y E R L Q T A A G K 
+
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+
+
+D K S R K E L G L G I D L L L T F M + - - - - - E A V N K K A R V V K N E A R F L L I A I Q M T A E V A R F R Y I Q N 
+G I S R T G M Q I N R H S L T T S Y L D L M S H S G T + - - S + L T Q S V A R A M L R F V T V T A E A L R F R Q I Q R 
+G + A R T K L G L G X I T L K S R M G X I Y G K D A T D Q K + Q Y Q K N E A E F L L I A V Q M V T E A S R F X Y I E N 
+G K I R E N I P L G L P A L D S A I T T L F Y Y N A + - - - - - - - N S A A S A L M V L I Q S T S E A A R Y K F I E Q 
+
+T Q G D K S R K E L G L G I D L L L T F M E A V N K K A R + - - - - V V K N E A R F L L I A I Q M T A E V A R F R Y I 
++ - - - - S R T G M Q I N R H S L T T S Y L D L M S H S + - - G T S L T Q S V A R A M L R F V T V T A E A L R F R Q I 
+- - - - - A R T K L G L G X I T L K S R M G X I Y G K D A T D Q K Q Y Q K N E A E F L L I A V Q M V T E A S R F X Y I 
++ - - - - I R E N I P L G L P A L D S A I T T L F Y Y + - - - - - - N A N S A A S A L M V L I Q S T S E A A R Y K F I 
+
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+score = 31 / 199 = 0.15577889447236182
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
