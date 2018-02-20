@@ -53,6 +53,9 @@ class bloc:
             col += [self.getSeq(k).getAminoAcid(i)]
         return col
     
+    def getLength(self):
+        return self.getSeq(0).getLength()
+    
     def show(self):
         print('#'*30)
         print('#######      BLOC      #######')
@@ -62,7 +65,7 @@ class bloc:
         else:
             print('The bloc has '+str(self.getNbSeqs())+' sequences')
             
-        print('The alignement is of lenght', self.getSeq(0).getLength())
+        print('The alignement is of lenght', self.getLength())
         if(not np.isnan(self.score)):
             print('The last merging score is',self.score)
         print('-'*30)
