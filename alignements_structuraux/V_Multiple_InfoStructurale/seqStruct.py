@@ -9,6 +9,7 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.PDB as pdb        
 import random
+import sys
 
 def RepresentsInt(s):
     try: 
@@ -42,7 +43,7 @@ def get_info(path):
     dico['num Chain'] = 0
     dico['num Residue'] = 0
     dico['num Atom'] = 0
-
+    dico["res0"] = 2147483647
     baryres = [0, 0, 0]
     baryatm = [0, 0, 0]
     for model in structure:
@@ -51,6 +52,8 @@ def get_info(path):
             dico['num Chain'] += 1
             for residue in chain:
                 if(residue.get_resname() != "HOH"):
+                    if(get_num(residue) < dico["res0"]):
+                        dico["res0"] = get_num(residue)
                     dico['num Residue'] += 1
                     #print("Amino acid", get_num(residue), convert_name_AA(residue.get_resname()))
                     bary_res = [0, 0, 0]
@@ -94,7 +97,7 @@ def get_seq(path):
                     if(aminoacid["enfouissement"] > maxenf):
                         maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
-                    aminoacid["id"] = get_num(residue)
+                    aminoacid["id"] = get_num(residue) - dico["res0"]
                     seq[get_num(residue)] = aminoacid
     
     lines = open(path, "r").readlines()

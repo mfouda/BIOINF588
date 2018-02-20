@@ -157,9 +157,19 @@ def launchInterface():
         log(logs, "Recherche de séquences dans le .tfa")
         SEQS = []
         lines = open(filename, 'r').readlines()
-        lines = [lines[i][:-2] for i in range(0, len(lines))]
+        #lines = [lines[i][:-2] for i in range(0, len(lines))]
+        for line in lines:
+            if(line[0] == ">"):
+                print(line[1:5])
+                if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
+                    log(logs, "Downloading " + line[1:5] + ".pdb ...")
+                    path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
+                    urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
+                else:
+                    log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
+                SEQS += [seqStruct("pdb/" + line[1:5] + ".pdb")]
         #.split("<")
-        print(lines)
+        #print(lines)
 #        for i in range(0, int(nM.get())):
 #            SEQS += [SEQS[0].mutate(float(Mtx.get()))]
             
