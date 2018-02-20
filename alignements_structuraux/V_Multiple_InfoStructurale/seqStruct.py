@@ -9,7 +9,6 @@ import numpy as np
 from Bio.Seq import Seq
 import Bio.PDB as pdb        
 import random
-import sys
 
 def RepresentsInt(s):
     try: 

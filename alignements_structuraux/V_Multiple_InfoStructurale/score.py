@@ -51,24 +51,40 @@ class aminoAcidScorer:
         return 0
 
     #on met des multiplicateurs qui dilatent cette affaire
-    def croisementPremier(self, aa1, aa2):
+    def blosum62mixte(self, aa1, aa2):
         result_temp = self.blosum62(aa1, aa2)
 
         #ma petite modif
         coef1 = 1 - aa1["enfouissement"] + 0.5
-        coef2 = 1 - aa1["enfouissement"] + 0.5
+        coef2 = 1 - aa2["enfouissement"] + 0.5
         coefmixte = 3 * (aa1["struct"] != aa2["struct"]) + 1
 
         return coef1*coef2*coefmixte*result_temp
     
-        print("WARNING - Can't compute the score for", aa1, aa2, "in 'blosum62' function")
-        return 0
+    def testRomain(self, aa1, aa2):
+        coef1 = 1.5 - aa1["enfouissement"]
+        coef2 = 1.5 - aa2["enfouissement"]
+        if(aa1["struct"] == aa2["struct"]):
+            if(aa1["struct"] == "V"):
+                coefmixte = 2
+            else:
+                coefmixte = 4
+        else:
+            if(aa1["struct"] == "V" or aa2["struct"] == "V"):
+                coefmixte = 1
+            else:
+                coefmixte = 0.5
+
+        return coef1*coef2*coefmixte*self.blosum62(aa1, aa2)
             
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
             return self.blosum62(aa1, aa2)
         
         if (self.getName() == "blosum62mixte"):
-            return self.croisementPremier(aa1, aa2)
+            return self.blosum62mixte(aa1, aa2)
+        
+        if (self.getName() == "testRomain"):
+            return self.testRomain(aa1, aa2)
         
         return 0
