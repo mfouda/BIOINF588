@@ -149,6 +149,56 @@ def launchInterface():
         """ Efface la zone graphique """
         logger.delete(tk.ALL)
         
+    def checkMSF():
+        global bloc
+        print(checkMSF)
+        filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .msf", filetypes=[('msf files','.msf'),('all files','.*')])
+        log(logs, "Ouverture d'un .msf et comparaison ...")
+        lines = open(filename, 'r').readlines()
+        
+        names = []
+        i = 6
+        while(lines[i][:5] == ' Name'):
+            names += [lines[i][7:11]]
+            i += 1
+        
+        SEQSmsf = []
+        last = dict()
+        for i in range(0, len(names)):
+            SEQSmsf += [seqStruct()]
+            SEQSmsf[-1].setName(names[i])
+            last[names[i]] = 0
+        
+        for line in lines:
+            if(line[:4] in names):
+                index = names.index(line[:4])
+                words = line.split()
+                for word in words[1:] :
+                    for aa in word :
+                        d = dict()
+                        d["name"] = aa
+                        d["struct"] = "V"
+                        if(aa != "."):
+                            d["id"]=last[line[:4]]
+                            last[line[:4]] += 1
+                        else:
+                            d["name"] = "-"
+                        SEQSmsf[index].addAminoAcidAfter(d)
+                        
+        for i in range(0, len(SEQSmsf)):
+            seq = seqStruct("pdb/" + SEQSmsf[i].getName() + ".pdb")
+            n = 0
+            for k in range(0, SEQSmsf[i].getLength()):
+                if("id" in SEQSmsf[i].getAminoAcid(k)):
+                    aa = SEQSmsf[i].getAminoAcid(k).copy()
+                    aaseq = seq.getAminoAcid(n).copy()
+                    aa["struct"] = aaseq["struct"]
+                    aa["enfouissement"] = aaseq["enfouissement"]
+                    SEQSmsf[i].setAminoAcid(k, aa)
+                    n += 1
+        
+        showSEQS(SEQSmsf)
+        
     def useTFA():
         global SEQS, params
         filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .tfa", filetypes=[('tfa files','.tfa'),('all files','.*')])
@@ -211,14 +261,14 @@ def launchInterface():
         log(logs, "Adding entry in params  {" + str(key.get()) + " : " + str(value.get())+"}")
         
     def alignate():
-        global SEQS
-        global params
+        global SEQS, params, bloc
         params["openGap"] = float(oG.get())
         params["extendGap"] = float(eG.get())
         scorer = aminoAcidScorer(str(sName.get()), params)
         log(logs, "scorer : " + scorer.getName() + " " + str(scorer.getParams()))
         log(logs, "Alignement des séquences en cours ...")
         bloc = aligne_multiple(SEQS, scorer)
+        ButtonMSF['state'] = 'normal'
         showBloc(bloc)
             
     # Création de la fenêtre principale (main window)
@@ -227,7 +277,7 @@ def launchInterface():
     
     #Widget Protein
     FramePName = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
-    FramePName.pack(side=tk.LEFT,padx=2,pady=2)
+    FramePName.pack(side = tk.LEFT, padx=2,pady=2)
     LabelP = tk.Label(FramePName,text="Proteine à analyser")
     LabelP.pack(padx=2,pady=2)
     strPName = tk.StringVar()
@@ -243,7 +293,7 @@ def launchInterface():
     
     #Widget Mutation
     FrameM = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
-    FrameM.pack(side=tk.LEFT,padx=2,pady=2)
+    FrameM.pack(side = tk.LEFT, padx=2,pady=2)
     LabelM = tk.Label(FrameM,text="Taux de mutation et nombre de mutants")
     LabelM.pack(padx=2,pady=2)
     Mtx = tk.StringVar()
@@ -260,7 +310,7 @@ def launchInterface():
     
     #Widget Scorer
     FrameS = tk.Frame(Mafenetre,borderwidth=2,relief=tk.GROOVE)
-    FrameS.pack(side=tk.LEFT,padx=2,pady=2)
+    FrameS.pack(side = tk.LEFT, padx=2,pady=2)
     LabelS= tk.Label(FrameS,text="Scorer")
     LabelS.pack(side = tk.TOP, padx=2,pady=2)
     sName = tk.StringVar()
@@ -300,22 +350,26 @@ def launchInterface():
     ButtonAps.pack(padx=2,pady=2)
     
     ButtonA = tk.Button(FrameS,text="Aligner",fg='navy',command=alignate, state=tk.DISABLED)
-    ButtonA.pack(padx=2,pady=2)
+    ButtonA.pack(side = tk.BOTTOM, padx=2,pady=2)
     
     
+    FrameABU = tk.Frame(Mafenetre,borderwidth=2)
+    FrameABU.pack(side = tk.LEFT, padx=2,pady=2)
+    #Check MSF
+    ButtonMSF = tk.Button(FrameABU,text="Check .msf",command=checkMSF)#, state=tk.DISABLED)
+    ButtonMSF.pack(padx=2,pady=2)
     # Création d'un widget Button (bouton Effacer)
-    BoutonReset = tk.Button(Mafenetre, text ='Reset', command = Reset)
-    BoutonReset.pack(side = tk.LEFT, padx = 5, pady = 5)
-    
+    BoutonReset = tk.Button(FrameABU, text ='Reset', command = Reset)
+    BoutonReset.pack(padx = 5, pady = 5)
     # Création d'un widget Button (bouton Quitter)
-    BoutonQuitter = tk.Button(Mafenetre, text ='Quitter', command = Mafenetre.destroy)
-    BoutonQuitter.pack(side = tk.LEFT, padx = 5, pady = 5)
+    BoutonQuitter = tk.Button(FrameABU, text ='Quitter', command = Mafenetre.destroy)
+    BoutonQuitter.pack(padx = 5, pady = 5)
     
     # Création d'un widget Canvas (zone graphique) pour les messages log
     Largeur = 600
     Hauteur = 320
     logger = tk.Canvas(Mafenetre, width = Largeur, height =Hauteur, bg ='white')
-    logger.pack(padx = 5, pady = 5)
+    logger.pack(side = tk.BOTTOM, padx = 5, pady = 5)
     
     Mafenetre.mainloop()
     

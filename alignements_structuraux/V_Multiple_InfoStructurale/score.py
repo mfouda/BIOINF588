@@ -66,9 +66,9 @@ class aminoAcidScorer:
         coef2 = 1.5 - aa2["enfouissement"]
         if(aa1["struct"] == aa2["struct"]):
             if(aa1["struct"] == "V"):
-                coefmixte = 2
+                coefmixte = 1.5
             else:
-                coefmixte = 4
+                coefmixte = 2
         else:
             if(aa1["struct"] == "V" or aa2["struct"] == "V"):
                 coefmixte = 1

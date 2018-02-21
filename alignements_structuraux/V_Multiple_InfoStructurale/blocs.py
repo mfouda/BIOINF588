@@ -169,15 +169,15 @@ class bloc:
         seqs = []
         for i in range(0, self.getNbSeqs() + bloc.getNbSeqs()):
             seqs += [seqStruct()]
-#            if(i < self.getNbSeqs()):
-#                seqs[-1].setName(self.getSeq(i).getName())
+            if(i < self.getNbSeqs()):
+                seqs[-1].setName(self.getSeq(i).getName())
 #                for k in range(index[0] + 1, self.getSeq(0).getLength()):
 #                    seqs[-1].addAminoAcidAfter(self.getSeq(i).getAminoAcid(k))
 #                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
 #                    seqs[-1].addAminoAcidAfter(minus)
 #                
-#            else:
-#                seqs[-1].setName(bloc.getSeq(i - self.getNbSeqs()).getName())
+            else:
+                seqs[-1].setName(bloc.getSeq(i - self.getNbSeqs()).getName())
 #                for k in range(index[0] + 1, self.getSeq(0).getLength()):
 #                    seqs[-1].addAminoAcidAfter(minus)
 #                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
