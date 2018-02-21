@@ -1,7 +1,7 @@
 from blocalignments import aligne_multiple
 from blocs import bloc
 from seqStruct import seqStruct
-
+from Bio import SeqIO
 
 def ordonne_col(j, n, aligne_ref, bloc_result) :
     col = bloc_result.getCol(j)
@@ -63,12 +63,10 @@ def msftoBloc (filename) :
             for word in words[1:] :
                 for aa in word :
                     d = dict()
-                    d["Name"] = aa
+                    d["name"] = aa
                     if(aa != "."):
                         d["id"]=last[name]
                         last[name] += 1        
-                    else :
-                        d["id"] = -1
                     res[name].addAminoAcidAfter(d)
         i += nb_seqs + 2
 
@@ -118,22 +116,42 @@ def score_C2 (filename, d, e) :
     
     return score_C/m, score_C2/(m*n)
 
-def score_SPS (bloc, dico) :
+def SPS(ref_msf,our_result):
+    seqs = [v for v in ref_msf.values()]
+    dico = dict()
+    for l in our_result.getSeqs() :
+        dico[l.getName()] = l
+    return score_SPS_computer(seqs, dico)
+
+def score_SPS_computer (seqs, dico) :
     score = 0
-    seqs = bloc.getSeqs()
-    n = len(seqs)
-    m = seqs[0].getLength()
+    score_ref = 0
+    nb_seq = len(seqs)
+    nb_col = seqs[0].getLength()
     
-    for i in range(n) :
+    for i in range(nb_seq) :
         seq1 = seqs[i]
         seq2 = dico[seq1.getName()]
-        for j in range(m) :
-            
+        j2 = 0
+        for j in range(nb_col) :
+            if (id in seq1.getAminoAcid(j)):
+                while id not in seq2.getAminoAcid(j2) :
+                    j2 += 1
+                col = []
+                for k in range(i+1, nb_seq):
+                    col += [(seqs[k][j], seqs[k].getName())]
+                for aa in col :
+                    if id in aa[0] :
+                        score_ref += 1
+                        aa2 = dico[aa[1]].getAminoAcid(j2)
+                        if id in aa2 :
+                            score += (aa[0]["id"] == aa2["id"])          
         
-    
-    return score
+    return score/score_ref
 
+import score
 
-
-#print(score_C('../RV11/BBS11017', 6, 1))
-print(msftoBloc('../RV11/BBS11017.msf'))
+scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+bloc1 = aligne_multiple(SeqIO.parse(open('../RV11/BBS11017.tfa'), 'fasta'), scorer1)
+print(SPS( msftoBloc('../RV11/BBS11017.msf'), bloc1))
