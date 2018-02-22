@@ -129,9 +129,9 @@ def comparePickleWithFasta(picklePath, fastaPath):
 
 
 ########## Executer Q3 ###########
-path = "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/orf_trans_all.fasta.gz"
-downloadFasta(path, "data/orf_trans_all.fasta")
-comparePickleWithFasta("pickleObjects/dicoPROT.p", "data/orf_trans_all.fasta")
+#path = "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/orf_trans_all.fasta.gz"
+#downloadFasta(path, "data/orf_trans_all.fasta")
+#comparePickleWithFasta("pickleObjects/dicoPROT.p", "data/orf_trans_all.fasta")
 ##################################
     
 # 1.3/ Identification des protéines à p-loop
@@ -297,10 +297,49 @@ def getInfoFromPDBFile(path):
 #print(getInfoFromPDBFile(path))
 ##################################
     
-# Question 3 :  ...
+# Question 3 :  Trouver code uniprot protein
     
-# ...
+def findUniprotCodeFromName(name):
+    page = urllib.urlopen("https://www.rcsb.org/structure/" + name)
+    #print(page.read())
+    page = str(page.read()).split("http://www.uniprot.org/uniprot/")[1]
+    code = ""
+    while(page[0] != '"'):
+        code += page[0]
+        page = page[1:]
+        
+    return(code)
+    
+########## Executer Q3 ###########
+#name = "2gaa"
+#print(findUniprotCodeFromName(name))
+##################################
 
+# Question 4 :  Telecharger séquence à partir du code uniprot
+    
+def downloadSequenceFromeUniprotCode(uniprotcode):
+    path = "http://www.uniprot.org/uniprot/" + uniprotcode + ".fasta"
+    urllib.urlretrieve(path, "uniprotFiles/" + uniprotcode + ".fasta")
+    
+########## Executer Q4 ###########
+#name = "2gaa"
+#downloadSequenceFromeUniprotCode(findUniprotCodeFromName(name))
+##################################
+
+# Question 4 :  Telecharger séquence à partir du code uniprot
+    
+def getInfoFromFastaFile(path):
+    fasta_sequences = SeqIO.parse(open(path),'fasta')
+    
+    for fasta in fasta_sequences:
+        name, sequence = fasta.id, str(fasta.seq)
+        print(name, sequence)
+    
+########## Executer Q4 ###########
+name = "2gaa"
+path = "uniprotFiles/" + findUniprotCodeFromName(name) + ".fasta"
+print(getInfoFromFastaFile(path))
+##################################
 
 
 

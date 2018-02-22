@@ -16,6 +16,7 @@ from blocalignments import aligne_multiple
 from score import aminoAcidScorer
 import urllib.request as urllib
 import os as os
+from eval import SPS
     
 def showBloc(bloc):
     # Création de la fenêtre principale (main window)
@@ -198,6 +199,7 @@ def launchInterface():
                     n += 1
         
         showSEQS(SEQSmsf)
+        
         
     def useTFA():
         global SEQS, params
