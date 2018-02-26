@@ -326,19 +326,40 @@ def downloadSequenceFromeUniprotCode(uniprotcode):
 #downloadSequenceFromeUniprotCode(findUniprotCodeFromName(name))
 ##################################
 
-# Question 4 :  Telecharger séquence à partir du code uniprot
+# Question 5 :  Telecharger séquence à partir du code uniprot
     
 def getInfoFromFastaFile(path):
     fasta_sequences = SeqIO.parse(open(path),'fasta')
-    
+    nbseq = 0
+    names = []
     for fasta in fasta_sequences:
-        name, sequence = fasta.id, str(fasta.seq)
-        print(name, sequence)
+        nbseq += 1
+        names += [(fasta.id).split("|")[2]]
+    print("Il y a "+str(nbseq)+" sequence"+"s"*(nbseq != 1))
+    print("Nom"+"s"*(nbseq != 1)+" :", names)
     
-########## Executer Q4 ###########
+########## Executer Q5 ###########
+#name = "2gaa"
+#path = "uniprotFiles/" + findUniprotCodeFromName(name) + ".fasta"
+#getInfoFromFastaFile(path)
+##################################
+
+# Question 6 :  Trouver les autres structures correspondant au code uniprot
+    
+def findStructureFromsUniprotCode(uniprotCode):
+    page = urllib.urlopen("http://www.uniprot.org/uniprot/" + uniprotCode)
+    #print(page.read())
+    page = str(page.read()).split("https://www.ebi.ac.uk/pdbe-srv/view/entry/")[1:]
+    struct = []
+    for p in page:
+        if(p[:4] not in struct):
+            struct += [p[:4]]
+    print(struct)
+    
+########## Executer Q6 ###########
 name = "2gaa"
-path = "uniprotFiles/" + findUniprotCodeFromName(name) + ".fasta"
-print(getInfoFromFastaFile(path))
+uniprotCode = findUniprotCodeFromName(name)
+findStructureFromsUniprotCode(uniprotCode)
 ##################################
 
 
