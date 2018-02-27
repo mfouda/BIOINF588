@@ -73,48 +73,63 @@ def msftoBloc (filename) :
     return res
 
 
-def score_C2 (filename, d, e) :
-    seqs_input = parse_tfa((filename + '.tfa'))
-    bloc_result = aligne_multiple(seqs_input, d, e)
-    aligne_ref = parse_msf(filename + '.msf')
-    
-    n = bloc_result.getNbSeqs()
-    m = len(bloc_result.getSeqs()[0])
-    score_C = 0
-    score_C2 = 0
-    
-    fichier = open(filename + '_score_C2.txt', 'w')
-    carac_per_line = 70
-    lines = ['']*(2 + m//carac_per_line)*(2*n + 8)
-    line = 0
-    carac = 0
-    
-    for j in range (m) :
-        col_nous, col_ref = ordonne_col(j, n, aligne_ref, bloc_result)
-        score_col = 0
-        
-        if carac == carac_per_line :
-            line += 2*n + 6
-            carac = 0
-        
-        for i in range (n) :
-            lines[line + i] += col_nous[i] + ' '
-            lines[line + i + n + 1] += col_ref[i] + ' '
-            score_col += (col_nous[i] == col_ref[i])
-        
-        lines[line + 2*n + 2] += str(score_col) + ' '
-        carac += 1           
-        score_C2 += score_col
-        score_C += (score_col == n)
-    
-    lines[line + 2*n + 5] += 'score_C2 = ' + str(score_C2) + ' / ' + str(m*n) + ' = ' + str(score_C2/(m*n))
-    lines[line + 2*n + 4] += 'score_C = ' + str(score_C) + ' / ' + str(m) + ' = ' + str(score_C/m)
-    
-    for x in lines :
-        fichier.write(x + '\n')
-    fichier.close()
-    
-    return score_C/m, score_C2/(m*n)
+#st est un string représentant une séquence sans gap
+def strToSeqStruct(name, st) :
+    seq = seqStruct()
+    seq.setName(name)
+    i = 0
+    for c in st :
+        d = dict()
+        d["name"] = c
+        d["id"] = i
+        seq.addAminoAcidAfter(d)
+        i += 1
+    return seq
+
+
+
+#def score_C2 (filename, d, e) :
+#    seqs_input = parse_tfa((filename + '.tfa'))
+#    bloc_result = aligne_multiple(seqs_input, d, e)
+#    aligne_ref = parse_msf(filename + '.msf')
+#    
+#    n = bloc_result.getNbSeqs()
+#    m = len(bloc_result.getSeqs()[0])
+#    score_C = 0
+#    score_C2 = 0
+#    
+#    fichier = open(filename + '_score_C2.txt', 'w')
+#    carac_per_line = 70
+#    lines = ['']*(2 + m//carac_per_line)*(2*n + 8)
+#    line = 0
+#    carac = 0
+#    
+#    for j in range (m) :
+#        col_nous, col_ref = ordonne_col(j, n, aligne_ref, bloc_result)
+#        score_col = 0
+#        
+#        if carac == carac_per_line :
+#            line += 2*n + 6
+#            carac = 0
+#        
+#        for i in range (n) :
+#            lines[line + i] += col_nous[i] + ' '
+#            lines[line + i + n + 1] += col_ref[i] + ' '
+#            score_col += (col_nous[i] == col_ref[i])
+#        
+#        lines[line + 2*n + 2] += str(score_col) + ' '
+#        carac += 1           
+#        score_C2 += score_col
+#        score_C += (score_col == n)
+#    
+#    lines[line + 2*n + 5] += 'score_C2 = ' + str(score_C2) + ' / ' + str(m*n) + ' = ' + str(score_C2/(m*n))
+#    lines[line + 2*n + 4] += 'score_C = ' + str(score_C) + ' / ' + str(m) + ' = ' + str(score_C/m)
+#    
+#    for x in lines :
+#        fichier.write(x + '\n')
+#    fichier.close()
+#    
+#    return score_C/m, score_C2/(m*n)
 
 def SPS(ref_msf,our_result):
     seqs = [v for v in ref_msf.values()]
@@ -134,14 +149,17 @@ def score_SPS_computer (seqs, dico) :
         seq2 = dico[seq1.getName()]
         j2 = 0
         for j in range(nb_col) :
-            if (id in seq1.getAminoAcid(j)):
+            if (id in seq1.getAminoAcid(j)): #problème ici : apparemment le test est toujours faux
+                print(0)
                 while id not in seq2.getAminoAcid(j2) :
                     j2 += 1
                 col = []
                 for k in range(i+1, nb_seq):
                     col += [(seqs[k][j], seqs[k].getName())]
                 for aa in col :
+                    print(1)
                     if id in aa[0] :
+                        print(2)
                         score_ref += 1
                         aa2 = dico[aa[1]].getAminoAcid(j2)
                         if id in aa2 :
@@ -151,7 +169,15 @@ def score_SPS_computer (seqs, dico) :
 
 import score
 
+def test_SPS(filename, scorer) :
+    fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
+    seqs = []
+    for fs in fasta_seqs :
+        seqs.append(strToSeqStruct(fs.id, str(fs.seq)))
+    our_bloc = aligne_multiple(seqs, scorer)
+    our_bloc.show()
+    print(SPS(msftoBloc('../RV11/' + filename + '.msf'), our_bloc))
+
 scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
 #scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-bloc1 = aligne_multiple(SeqIO.parse(open('../RV11/BBS11017.tfa'), 'fasta'), scorer1)
-print(SPS( msftoBloc('../RV11/BBS11017.msf'), bloc1))
+test_SPS('BBS11017', scorer1)
