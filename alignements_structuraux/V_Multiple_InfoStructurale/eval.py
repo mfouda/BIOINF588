@@ -144,25 +144,22 @@ def score_SPS_computer (seqs, dico) :
     nb_seq = len(seqs)
     nb_col = seqs[0].getLength()
     
-    for i in range(nb_seq) :
+    for i in range(nb_seq-1) :
         seq1 = seqs[i]
         seq2 = dico[seq1.getName()]
         j2 = 0
         for j in range(nb_col) :
-            if (id in seq1.getAminoAcid(j)): #problème ici : apparemment le test est toujours faux
-                print(0)
-                while id not in seq2.getAminoAcid(j2) :
+            if 'id' in seq1.getAminoAcid(j):
+                while 'id' not in seq2.getAminoAcid(j2) :
                     j2 += 1
                 col = []
                 for k in range(i+1, nb_seq):
-                    col += [(seqs[k][j], seqs[k].getName())]
+                    col += [(seqs[k].getAminoAcid(j), seqs[k].getName())]
                 for aa in col :
-                    print(1)
-                    if id in aa[0] :
-                        print(2)
+                    if 'id' in aa[0] :
                         score_ref += 1
                         aa2 = dico[aa[1]].getAminoAcid(j2)
-                        if id in aa2 :
+                        if 'id' in aa2 :
                             score += (aa[0]["id"] == aa2["id"])          
         
     return score/score_ref
@@ -175,9 +172,8 @@ def test_SPS(filename, scorer) :
     for fs in fasta_seqs :
         seqs.append(strToSeqStruct(fs.id, str(fs.seq)))
     our_bloc = aligne_multiple(seqs, scorer)
-    our_bloc.show()
     print(SPS(msftoBloc('../RV11/' + filename + '.msf'), our_bloc))
 
 scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
 #scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-test_SPS('BBS11017', scorer1)
+test_SPS('BBS11030', scorer1)
