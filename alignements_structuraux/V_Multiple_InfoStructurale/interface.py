@@ -16,6 +16,7 @@ from blocalignments import aligne_multiple
 from score import aminoAcidScorer
 import urllib.request as urllib
 import os as os
+from eval_SPS import SPS_romainTuned
     
 def showBloc(bloc):
     # Création de la fenêtre principale (main window)
@@ -148,12 +149,10 @@ def launchInterface():
     def Effacer():
         """ Efface la zone graphique """
         logger.delete(tk.ALL)
-        
-    def checkMSF():
-        global bloc
-        print(checkMSF)
+    
+    def msfToSeqs():
         filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .msf", filetypes=[('msf files','.msf'),('all files','.*')])
-        log(logs, "Ouverture d'un .msf et comparaison ...")
+        log(logs, "Ouverture d'un .msf ...")
         lines = open(filename, 'r').readlines()
         
         names = []
@@ -196,9 +195,15 @@ def launchInterface():
                     aa["enfouissement"] = aaseq["enfouissement"]
                     SEQSmsf[i].setAminoAcid(k, aa)
                     n += 1
+                    
+        return(SEQSmsf)
+
+    def SPS_MSF():
+        global bloc
+        log(logs, "SPS score = " + str(SPS_romainTuned(msfToSeqs(), bloc)))
         
-        showSEQS(SEQSmsf)
-        
+    def checkMSF():
+        showSEQS(msfToSeqs())
         
     def useTFA():
         global SEQS, params
@@ -357,8 +362,12 @@ def launchInterface():
     FrameABU = tk.Frame(Mafenetre,borderwidth=2)
     FrameABU.pack(side = tk.LEFT, padx=2,pady=2)
     #Check MSF
-    ButtonMSF = tk.Button(FrameABU,text="Check .msf",command=checkMSF)#, state=tk.DISABLED)
+    FrameABUMSF = tk.Frame(FrameABU,borderwidth=2, relief=tk.GROOVE)
+    FrameABUMSF.pack(side = tk.LEFT, padx=2,pady=2)
+    ButtonMSF = tk.Button(FrameABUMSF,text="Check .msf",command=checkMSF)#, state=tk.DISABLED)
     ButtonMSF.pack(padx=2,pady=2)
+    ButtonSPS = tk.Button(FrameABUMSF,text="SPS with .msf",command=SPS_MSF)#, state=tk.DISABLED)
+    ButtonSPS.pack(padx=2,pady=2)
     # Création d'un widget Button (bouton Effacer)
     BoutonReset = tk.Button(FrameABU, text ='Reset', command = Reset)
     BoutonReset.pack(padx = 5, pady = 5)

@@ -141,11 +141,11 @@ class seqStruct:
     def getSequence(self):
         return self.seq
     
+    def getLength(self):
+        return len(self.seq)
+    
     def setSequence(self, seq):
         self.seq = seq
-    
-    def getLength(self):
-        return len(self.getSequence())
     
     def getName(self):
         return self.name

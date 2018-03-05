@@ -14,10 +14,6 @@ def ordonne_col(j, n, aligne_ref, bloc_result) :
         col_nous[k] = col[i]
     return col_nous, col_ref
 
-
-
-
-
 def parse_tfa (filename) :
     seqs = []
     lines = open(filename, 'r').readlines()
@@ -34,7 +30,6 @@ def parse_tfa (filename) :
         while i<n and not lines[i][0] == '>' :
             i+=1
     return seqs
-
 
 def msftoBloc (filename) :
     seqs = []
@@ -138,6 +133,12 @@ def SPS(ref_msf,our_result):
         dico[l.getName()] = l
     return score_SPS_computer(seqs, dico)
 
+def SPS_romainTuned(ref_msf,our_result):
+    dico = dict()
+    for l in our_result.getSeqs() :
+        dico[l.getName()] = l
+    return score_SPS_computer(ref_msf, dico)
+
 def score_SPS_computer (seqs, dico) :
     score = 0
     score_ref = 0
@@ -164,8 +165,6 @@ def score_SPS_computer (seqs, dico) :
         
     return score/score_ref
 
-import score
-
 def test_SPS(filename, scorer) :
     fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
     seqs = []
@@ -174,6 +173,7 @@ def test_SPS(filename, scorer) :
     our_bloc = aligne_multiple(seqs, scorer)
     print(SPS(msftoBloc('../RV11/' + filename + '.msf'), our_bloc))
 
-scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
-#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-test_SPS('BBS11030', scorer1)
+#import score
+#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+##scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+#test_SPS('BBS11030', scorer1)
