@@ -286,11 +286,14 @@ def launchInterface():
     FramePName.pack(side = tk.LEFT, padx=2,pady=2)
     LabelP = tk.Label(FramePName,text="Proteine à analyser")
     LabelP.pack(padx=2,pady=2)
+    
+    FramePN = tk.Frame(FramePName,borderwidth=2,relief=tk.GROOVE)
+    FramePN.pack(side = tk.TOP, padx=2,pady=2)
     strPName = tk.StringVar()
     strPName.set("2byg")
-    TextVarP = tk.Entry(FramePName, textvariable=strPName, width=15)
+    TextVarP = tk.Entry(FramePN, textvariable=strPName, width=15)
     TextVarP.pack(padx=2,pady=2)
-    ButtonP = tk.Button(FramePName,text="Afficher la proteine",fg='navy',command=showP)
+    ButtonP = tk.Button(FramePN,text="Afficher la proteine",fg='navy',command=showP)
     ButtonP.pack(padx=2,pady=2)
     
     ButtonTFA = tk.Button(FramePName,text="Utiliser .tfa",fg='navy',command=useTFA)
@@ -363,7 +366,9 @@ def launchInterface():
     FrameABU.pack(side = tk.LEFT, padx=2,pady=2)
     #Check MSF
     FrameABUMSF = tk.Frame(FrameABU,borderwidth=2, relief=tk.GROOVE)
-    FrameABUMSF.pack(side = tk.LEFT, padx=2,pady=2)
+    FrameABUMSF.pack(side = tk.TOP, padx=2,pady=2)
+    LabelABUMSF = tk.Label(FrameABUMSF,text="Check with .msf")
+    LabelABUMSF.pack(padx=2,pady=2)
     ButtonMSF = tk.Button(FrameABUMSF,text="Check .msf",command=checkMSF)#, state=tk.DISABLED)
     ButtonMSF.pack(padx=2,pady=2)
     ButtonSPS = tk.Button(FrameABUMSF,text="SPS with .msf",command=SPS_MSF)#, state=tk.DISABLED)

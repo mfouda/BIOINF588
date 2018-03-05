@@ -66,16 +66,13 @@ class aminoAcidScorer:
         coef2 = 1.5 - aa2["enfouissement"]
         if(aa1["struct"] == aa2["struct"]):
             if(aa1["struct"] == "V"):
-                coefmixte = 1.5
+                coefmixte = 1
             else:
                 coefmixte = 2
         else:
-            if(aa1["struct"] == "V" or aa2["struct"] == "V"):
-                coefmixte = 1
-            else:
-                coefmixte = 0.5
-
-        return coef1*coef2*coefmixte*self.blosum62(aa1, aa2)
+            coefmixte = 4
+            
+        return ((coef1*coef2*coefmixte  - 0.5*0.5) / (4*1.5*1.5 - 0.5*0.5)) * self.blosum62(aa1, aa2)
             
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
