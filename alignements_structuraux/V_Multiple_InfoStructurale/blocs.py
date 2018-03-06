@@ -143,7 +143,9 @@ class bloc:
                 score = max([iy[i, j], m[i, j], ix[i, j]]) + blosum
                 m[i+1, j+1] = score
                 
-                if(score >= maxi):
+                if(score >= maxi and 
+                   ((j + 1 == bloc.getSeq(0).getLength() and i != 0) or 
+                    (i + 1 == self.getSeq(0).getLength() and j != 0))):
                     maxi = score
                     index = [i+1, j+1]
                 
@@ -169,9 +171,9 @@ class bloc:
         
     def add(self, bloc, scorer):
         maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
-        index = list(isfrom.shape)
-        index[0] -= 1
-        index[1] -= 1
+#        index = list(isfrom.shape)
+#        index[0] -= 1
+#        index[1] -= 1
         minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
         plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
         
@@ -180,17 +182,17 @@ class bloc:
             seqs += [seqStruct()]
             if(i < self.getNbSeqs()):
                 seqs[-1].setName(self.getSeq(i).getName())
-#                for k in range(index[0] + 1, self.getSeq(0).getLength()):
-#                    seqs[-1].addAminoAcidAfter(self.getSeq(i).getAminoAcid(k))
-#                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
-#                    seqs[-1].addAminoAcidAfter(minus)
-#                
+                for k in range(index[0] + 1, self.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(self.getSeq(i).getAminoAcid(k))
+                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(minus)
+                
             else:
                 seqs[-1].setName(bloc.getSeq(i - self.getNbSeqs()).getName())
-#                for k in range(index[0] + 1, self.getSeq(0).getLength()):
-#                    seqs[-1].addAminoAcidAfter(minus)
-#                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
-#                    seqs[-1].addAminoAcidAfter(bloc.getSeq(i - self.getNbSeqs()).getAminoAcid(k))
+                for k in range(index[0] + 1, self.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(minus)
+                for k in range(index[1] + 1, bloc.getSeq(0).getLength()):
+                    seqs[-1].addAminoAcidAfter(bloc.getSeq(i - self.getNbSeqs()).getAminoAcid(k))
         
         minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
         plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
