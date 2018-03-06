@@ -31,7 +31,8 @@ def parse_tfa (filename) :
             i+=1
     return seqs
 
-def msftoBloc (filename) :
+#transforme un fichier msf (alignement de référence) en dictionnaire de SeqStruct
+def msftoDict (filename) :
     seqs = []
     lines = open(filename, 'r').readlines()
     n = len(lines)
@@ -161,9 +162,9 @@ def score_SPS_computer (seqs, dico) :
                         score_ref += 1
                         aa2 = dico[aa[1]].getAminoAcid(j2)
                         if 'id' in aa2 :
-                            score += (aa[0]["id"] == aa2["id"])          
-        
-    return score #/score_ref
+                            score += (aa[0]["id"] == aa2["id"])
+                j2 += 1
+    return score/score_ref
 
 def test_SPS(filename, scorer) :
     fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
@@ -171,9 +172,10 @@ def test_SPS(filename, scorer) :
     for fs in fasta_seqs :
         seqs.append(strToSeqStruct(fs.id, str(fs.seq)))
     our_bloc = aligne_multiple(seqs, scorer)
-    print(SPS(msftoBloc('../RV11/' + filename + '.msf'), our_bloc))
+    ref = msftoDict('../RV11/' + filename + '.msf')
+    print(SPS(ref, our_bloc))
 
-#import score
-#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
-##scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-#test_SPS('BBS11030', scorer1)
+import score
+scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
+#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+test_SPS('BB11001', scorer1)
