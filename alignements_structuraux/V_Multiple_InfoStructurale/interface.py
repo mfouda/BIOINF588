@@ -361,7 +361,6 @@ def launchInterface():
     ButtonA = tk.Button(FrameS,text="Aligner",fg='navy',command=alignate, state=tk.DISABLED)
     ButtonA.pack(side = tk.BOTTOM, padx=2,pady=2)
     
-    
     FrameABU = tk.Frame(Mafenetre,borderwidth=2)
     FrameABU.pack(side = tk.LEFT, padx=2,pady=2)
     #Check MSF

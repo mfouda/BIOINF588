@@ -100,13 +100,9 @@ class bloc:
         iy = np.zeros(size).astype(int)
         isfrom = np.zeros(size).astype(int)
         del size
-        #m = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        #ix = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        #iy = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
-        #isfrom = np.zeros((len(self.getSeqs()[0]) + 1, len(bloc.getSeqs()[0]) + 1)).astype(int)
         
-        minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
-        plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
+        minus = dict({"name" : "-", "struct" : "V", "enfouissement" : 0})
+        plus = dict({"name" : "+", "struct" : "V", "enfouissement" : 0})
         
         ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
         db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
@@ -133,6 +129,7 @@ class bloc:
             iy[0, j+1] = iy[0, j] + e
             isfrom[0, j+1] = -1
         
+        #Inutile pour le moment
         index, maxi = [0,0], m[0][0]
         
         for i in range(0, self.getSeq(0).getLength()):     #Relation de récurrence
@@ -160,7 +157,6 @@ class bloc:
                 
                 #Calcul de isfrom[i+1, j+1]
                 isfrom[i+1, j+1] = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
-            
             
         writer = ExcelWriter('pickleObjects/test' + str(random.randint(0, 10000)) + '.xlsx')
         pd.DataFrame(m).to_excel(writer,'Sheet1',index=False)
@@ -292,13 +288,3 @@ class bloc:
     def alignementscore(self, bloc, scorer):
         maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
         return maxi #retourner le score entre les deux
-
-#seq = Seq("WWAGCATTTGGCTGG")
-#bloc1 = bloc(seq)
-#bloc1.show()
-#
-#bloc2 = bloc(Seq("AGATGACTACCCT"))
-#score = bloc1.alignementscore(bloc2, 10, 0.5)
-#print(score)
-#bloc1.show()
-#print(type(bloc1))
