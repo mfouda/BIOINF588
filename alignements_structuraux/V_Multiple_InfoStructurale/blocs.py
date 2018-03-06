@@ -4,7 +4,7 @@ Created on Tue Jan 23 14:19:05 2018
 
 @author: romai
 """
-
+import datetime
 import numpy as np
 from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
@@ -130,7 +130,7 @@ class bloc:
             isfrom[0, j+1] = -1
         
         #Inutile pour le moment
-        index, maxi = [0,0], m[0][0]
+        index, maxi = [0,0], -100000
         
         for i in range(0, self.getSeq(0).getLength()):     #Relation de récurrence
             coli = self.getCol(i)
@@ -143,11 +143,10 @@ class bloc:
                 score = max([iy[i, j], m[i, j], ix[i, j]]) + blosum
                 m[i+1, j+1] = score
                 
-                if(score >= maxi and 
-                   ((j + 1 == bloc.getSeq(0).getLength() and i != 0) or 
-                    (i + 1 == self.getSeq(0).getLength() and j != 0))):
-                    maxi = score
-                    index = [i+1, j+1]
+                if(score >= maxi):
+                    if((j + 1 == bloc.getSeq(0).getLength()) or (i + 1 == self.getSeq(0).getLength())):
+                        maxi = score
+                        index = [i+1, j+1]
                 
                 #Calcul de ix[i+1, j+1] et iy[i+1, j+1]
                 #ix[i+1, j+1] = max(m[i, j + 1] - scorer.getParams()["openGap"], ix[i, j + 1] - scorer.getParams()["extendGap"])
@@ -159,8 +158,15 @@ class bloc:
                 
                 #Calcul de isfrom[i+1, j+1]
                 isfrom[i+1, j+1] = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
+                if(iy[i+1, j+1] == m[i+1, j+1]):
+                    isfrom[i+1, j+1] = -1
+                if(iy[i+1, j+1] == m[i+1, j+1]):
+                    isfrom[i+1, j+1] = -1
             
-        writer = ExcelWriter('pickleObjects/test' + str(random.randint(0, 10000)) + '.xlsx')
+        writer = ExcelWriter('pickleObjects/test' + str(datetime.datetime.now())[:10] +
+                             "_" + str(datetime.datetime.now())[11:13] +
+                             "_" + str(datetime.datetime.now())[14:16] +
+                             "_" + str(datetime.datetime.now())[17:19] + '.xlsx')
         pd.DataFrame(m).to_excel(writer,'Sheet1',index=False)
         pd.DataFrame(ix).to_excel(writer,'Sheet2',index=False)
         pd.DataFrame(iy).to_excel(writer,'Sheet3',index=False)
@@ -171,9 +177,11 @@ class bloc:
         
     def add(self, bloc, scorer):
         maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
-#        index = list(isfrom.shape)
-#        index[0] -= 1
-#        index[1] -= 1
+        print(index)
+#        if(index == [0, 0]):
+#            index = list(isfrom.shape)
+#            index[0] -= 1
+#            index[1] -= 1
         minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
         plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
         
@@ -197,10 +205,6 @@ class bloc:
         minus = dict({"name" : "-", "struct" : "", "enfouissement" : 0})
         plus = dict({"name" : "+", "struct" : "", "enfouissement" : 0})
         
-        #Rajouter la suite des séquences
-        
-
-        #while(0 not in index):
         while(index != [0, 0]):
             if(isfrom.item(tuple(index)) == 0):
                 index = [index[0] - 1, index[1] - 1]

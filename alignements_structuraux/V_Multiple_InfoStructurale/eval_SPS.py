@@ -173,7 +173,7 @@ def test_SPS(filename, scorer) :
     our_bloc = aligne_multiple(seqs, scorer)
     print(SPS(msftoBloc('../RV11/' + filename + '.msf'), our_bloc))
 
-import score
-scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
-#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-test_SPS('BB11001', scorer1)
+#import score
+#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+##scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+#test_SPS('BB11001', scorer1)
