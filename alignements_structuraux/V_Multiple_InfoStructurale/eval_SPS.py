@@ -3,16 +3,6 @@ from blocs import bloc
 from seqStruct import seqStruct
 from Bio import SeqIO
 
-def ordonne_col(j, n, aligne_ref, bloc_result) :
-    col = bloc_result.getCol(j)
-    col_ref = []
-    col_nous = ['']*n
-    for i in range (n) :
-        col_ref.append(aligne_ref[i][j])
-        name_seq = bloc_result.getName(i)
-        k = int(name_seq[3:])
-        col_nous[k] = col[i]
-    return col_nous, col_ref
 
 def parse_tfa (filename) :
     seqs = []
@@ -83,50 +73,6 @@ def strToSeqStruct(name, st) :
     return seq
 
 
-
-#def score_C2 (filename, d, e) :
-#    seqs_input = parse_tfa((filename + '.tfa'))
-#    bloc_result = aligne_multiple(seqs_input, d, e)
-#    aligne_ref = parse_msf(filename + '.msf')
-#    
-#    n = bloc_result.getNbSeqs()
-#    m = len(bloc_result.getSeqs()[0])
-#    score_C = 0
-#    score_C2 = 0
-#    
-#    fichier = open(filename + '_score_C2.txt', 'w')
-#    carac_per_line = 70
-#    lines = ['']*(2 + m//carac_per_line)*(2*n + 8)
-#    line = 0
-#    carac = 0
-#    
-#    for j in range (m) :
-#        col_nous, col_ref = ordonne_col(j, n, aligne_ref, bloc_result)
-#        score_col = 0
-#        
-#        if carac == carac_per_line :
-#            line += 2*n + 6
-#            carac = 0
-#        
-#        for i in range (n) :
-#            lines[line + i] += col_nous[i] + ' '
-#            lines[line + i + n + 1] += col_ref[i] + ' '
-#            score_col += (col_nous[i] == col_ref[i])
-#        
-#        lines[line + 2*n + 2] += str(score_col) + ' '
-#        carac += 1           
-#        score_C2 += score_col
-#        score_C += (score_col == n)
-#    
-#    lines[line + 2*n + 5] += 'score_C2 = ' + str(score_C2) + ' / ' + str(m*n) + ' = ' + str(score_C2/(m*n))
-#    lines[line + 2*n + 4] += 'score_C = ' + str(score_C) + ' / ' + str(m) + ' = ' + str(score_C/m)
-#    
-#    for x in lines :
-#        fichier.write(x + '\n')
-#    fichier.close()
-#    
-#    return score_C/m, score_C2/(m*n)
-
 def SPS(ref_msf,our_result):
     seqs = [v for v in ref_msf.values()]
     dico = dict()
@@ -134,11 +80,13 @@ def SPS(ref_msf,our_result):
         dico[l.getName()] = l
     return score_SPS_computer(seqs, dico)
 
+
 def SPS_romainTuned(ref_msf,our_result):
     dico = dict()
     for l in our_result.getSeqs() :
         dico[l.getName()] = l
     return score_SPS_computer(ref_msf, dico)
+
 
 def score_SPS_computer (seqs, dico) :
     score = 0
