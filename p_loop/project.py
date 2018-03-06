@@ -357,9 +357,9 @@ def findStructureFromsUniprotCode(uniprotCode):
     print(struct)
     
 ########## Executer Q6 ###########
-name = "2gaa"
-uniprotCode = findUniprotCodeFromName(name)
-findStructureFromsUniprotCode(uniprotCode)
+#name = "2gaa"
+#uniprotCode = findUniprotCodeFromName(name)
+#findStructureFromsUniprotCode(uniprotCode)
 ##################################
 
 
