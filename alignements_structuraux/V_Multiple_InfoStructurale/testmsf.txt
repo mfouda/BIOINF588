@@ -1,0 +1,23 @@
+PileUp 
+
+
+
+Name: aSequenceHasNoName Len: 168 Check: 4681 Weight:  10.0 
+Name: aSequenceHasNoName Len: 168 Check: 4681 Weight:  10.0 
+
+ // 
+ 
+ 
+ 
+aSequenceHasNoName      WWAGC..ATT TGGCTG.... ....GAAG.. .......... ..GGGGGGGG 
+aSequenceHasNoName      ..AGATGACT ACCCTAAAAA AAAAAAATTT TTTTTTTTTT TTGGGGGGGG 
+
+aSequenceHasNoName      GGGGGGGGTT TTTTTTTTTT TTTTTTTTTA AAAAAAAAAA AAAAAAGGGG 
+aSequenceHasNoName      GGGGGGGG.. .......... ...AAAAAAA AAAAAAAAAA AAAAAAAAAA 
+
+aSequenceHasNoName      GGGGGGGGGG GGGGGGGGGG GGGGGGGTTT TTTTTTTTTT TTTTTTTAAA 
+aSequenceHasNoName      AAAAAAAAAA AGGGGGGGGT TTTTTTTTTT TTTTTTTTTT TTTTTTTAAA 
+
+aSequenceHasNoName      AAAAA..... ........
+aSequenceHasNoName      AAAAAAAAAA AAAAAAAA
+
