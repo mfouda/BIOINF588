@@ -35,4 +35,32 @@ def convertBlocMsf(myBloc,name):
     
     f.close()
     
+seq = seqStruct()
+l=[]
+cha="WWAGCATTTGGCTGG"
+for c in cha:
+    dico={}
+    dico["name"]=c
+    l+=[dico]
+seq.setSequence(l)
+bloc1=bloc(seq)
+#bloc1.show()
+
+seq2 = seqStruct()
+l2=[]
+cha2="AGATGACTACCCT"
+for c in cha2:
+    dico2={}
+    dico2["name"]=c
+    l2+=[dico2]
+seq2.setSequence(l2)
+bloc2=bloc(seq2)
+bloc2.show()
+
+import score
+scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 6, "extendGap" : 1}))
+score1 = bloc1.add(bloc2,scorer1)
+convertBlocMsf(bloc1,testmsf)
+
+    
 
