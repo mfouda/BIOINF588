@@ -163,15 +163,15 @@ class bloc:
                 if(iy[i+1, j+1] == m[i+1, j+1]):
                     isfrom[i+1, j+1] = -1
             
-        writer = ExcelWriter('pickleObjects/test' + str(datetime.datetime.now())[:10] +
-                             "_" + str(datetime.datetime.now())[11:13] +
-                             "_" + str(datetime.datetime.now())[14:16] +
-                             "_" + str(datetime.datetime.now())[17:19] + '.xlsx')
-        pd.DataFrame(m).to_excel(writer,'Sheet1',index=False)
-        pd.DataFrame(ix).to_excel(writer,'Sheet2',index=False)
-        pd.DataFrame(iy).to_excel(writer,'Sheet3',index=False)
-        pd.DataFrame(isfrom).to_excel(writer,'Sheet4',index=False)
-        writer.save()
+#        writer = ExcelWriter('pickleObjects/test' + str(datetime.datetime.now())[:10] +
+#                             "_" + str(datetime.datetime.now())[11:13] +
+#                             "_" + str(datetime.datetime.now())[14:16] +
+#                             "_" + str(datetime.datetime.now())[17:19] + '.xlsx')
+#        pd.DataFrame(m).to_excel(writer,'Sheet1',index=False)
+#        pd.DataFrame(ix).to_excel(writer,'Sheet2',index=False)
+#        pd.DataFrame(iy).to_excel(writer,'Sheet3',index=False)
+#        pd.DataFrame(isfrom).to_excel(writer,'Sheet4',index=False)
+#        writer.save()
 
         return maxi, index, isfrom
         
