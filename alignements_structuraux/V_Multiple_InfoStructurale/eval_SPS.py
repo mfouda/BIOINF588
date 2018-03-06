@@ -166,6 +166,7 @@ def score_SPS_computer (seqs, dico) :
                 j2 += 1
     return score/score_ref
 
+
 def test_SPS(filename, scorer) :
     fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
     seqs = []
@@ -179,3 +180,4 @@ import score
 scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
 #scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
 test_SPS('BB11001', scorer1)
+
