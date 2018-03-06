@@ -10,6 +10,12 @@ from Bio.Seq import Seq
 import Bio.SubsMat.MatrixInfo
 from seqStruct import seqStruct
 from score import aminoAcidScorer
+import pickle as pk
+import random
+import pandas as pd
+from pandas import ExcelWriter
+from pandas import ExcelFile
+ 
 
 class bloc:
     
@@ -153,9 +159,16 @@ class bloc:
                                   iy[i + 1, j] + self.aminoAcidScore(colj, [minus], scorer))
                 
                 #Calcul de isfrom[i+1, j+1]
-                isfromij = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
-                isfrom[i+1, j+1] = isfromij
-                
+                isfrom[i+1, j+1] = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
+            
+            
+        writer = ExcelWriter('pickleObjects/test' + str(random.randint(0, 10000)) + '.xlsx')
+        pd.DataFrame(m).to_excel(writer,'Sheet1',index=False)
+        pd.DataFrame(ix).to_excel(writer,'Sheet2',index=False)
+        pd.DataFrame(iy).to_excel(writer,'Sheet3',index=False)
+        pd.DataFrame(isfrom).to_excel(writer,'Sheet4',index=False)
+        writer.save()
+
         return maxi, index, isfrom
         
     def add(self, bloc, scorer):

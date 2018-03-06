@@ -163,7 +163,7 @@ def score_SPS_computer (seqs, dico) :
                         if 'id' in aa2 :
                             score += (aa[0]["id"] == aa2["id"])          
         
-    return score/score_ref
+    return score #/score_ref
 
 def test_SPS(filename, scorer) :
     fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
