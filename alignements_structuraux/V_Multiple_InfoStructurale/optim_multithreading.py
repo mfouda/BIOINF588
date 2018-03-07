@@ -31,26 +31,6 @@ import sys
 from threading import Thread
 import time
 
-class Afficheur(Thread):
-
-    """Thread chargé simplement d'afficher une lettre dans la console."""
-
-    def __init__(self, lettre):
-        Thread.__init__(self)
-        self.lettre = lettre
-        self.value = 0
-
-    def run(self):
-        """Code à exécuter pendant l'exécution du thread."""
-        self.value = self.lettre ** 2
-        attente = 0.2
-        attente += random.randint(1, 120) / 100
-        time.sleep(attente)
-        print(self.value)
-
-    def getValue(self):
-        return self.value
-
 class ALIGNEMENT_SCORE(Thread):
 
     """Thread chargé simplement d'afficher une lettre dans la console."""
@@ -233,28 +213,14 @@ def launchInterface():
             for k, v in globalparams.items():
                 params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
             print("Iteration", i, str(params))
-            tmpSPS = 0
-            T = []
-            keys = [1, 2, 3, 4, 5, 6]
-            
-#            for k in range(0, len(keys)):
-#                T += [Afficheur(keys[k])]
-#            for k in range(0, len(keys)):
-#                T[k].start()
-#            for k in range(0, len(keys)):
-#                T[k].join()
             
             scorer = aminoAcidScorer(str(sName.get()), params)
             keys = list(SEQS.keys())
-            for k in range(0, len(keys)):
-                key = keys[k]
-                T += [ALIGNEMENT_SCORE([SEQSmsf[key], SEQS[key], scorer, key])]
-            for k in range(0, len(keys)):
-                T[k].start()
-            for k in range(0, len(keys)):
-                T[k].join()   
-            for k in range(0, len(keys)):
-                tmpSPS += T[k].getScore() / len(SEQS)
+            
+            T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), scorer, keys[k]]) for k in range(0, len(keys))]
+            [T[k].start() for k in range (0, len(keys))]
+            [T[k].join() for k in range (0, len(keys))]
+            tmpSPS = sum(T[k].getScore() for k in range(0, len(keys))) / len(SEQS)
 #            for k in SEQS.keys():
 #                tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
 #                tmpSPS += tmptmpSPS / len(SEQS)
