@@ -16,8 +16,8 @@
       <file leaf-file-name="interface.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/interface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1912">
-              <caret line="256" column="41" lean-forward="false" selection-start-line="256" selection-start-column="41" selection-end-line="256" selection-end-column="41" />
+            <state relative-caret-position="316">
+              <caret line="379" column="42" lean-forward="true" selection-start-line="379" selection-start-column="42" selection-end-line="379" selection-end-column="42" />
               <folding>
                 <element signature="e#106#126#0" expanded="true" />
               </folding>
@@ -38,8 +38,8 @@
       <file leaf-file-name="eval_SPS.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/eval_SPS.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="115" column="25" lean-forward="false" selection-start-line="115" selection-start-column="25" selection-end-line="115" selection-end-column="25" />
+            <state relative-caret-position="118">
+              <caret line="99" column="34" lean-forward="true" selection-start-line="99" selection-start-column="34" selection-end-line="99" selection-end-column="34" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
               </folding>
@@ -59,11 +59,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="blocs.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="blocs.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/blocs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4180">
-              <caret line="35" column="4" lean-forward="false" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+            <state relative-caret-position="140">
+              <caret line="275" column="44" lean-forward="true" selection-start-line="275" selection-start-column="44" selection-end-line="275" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="optim.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4788">
+              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -160,7 +170,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.interface">
+  <component name="RunManager" selected="Python.optim">
     <configuration name="blocalignments" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -212,19 +222,19 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <configuration name="score" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="optim" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/alignements_structuraux" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="BIOINF588" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/alignements_structuraux/score.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -247,19 +257,19 @@
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.score" />
-      <item index="1" class="java.lang.String" itemvalue="Python.test" />
-      <item index="2" class="java.lang.String" itemvalue="Python.blocalignments" />
-      <item index="3" class="java.lang.String" itemvalue="Python.eval_SPS" />
-      <item index="4" class="java.lang.String" itemvalue="Python.interface" />
+      <item index="0" class="java.lang.String" itemvalue="Python.test" />
+      <item index="1" class="java.lang.String" itemvalue="Python.blocalignments" />
+      <item index="2" class="java.lang.String" itemvalue="Python.eval_SPS" />
+      <item index="3" class="java.lang.String" itemvalue="Python.interface" />
+      <item index="4" class="java.lang.String" itemvalue="Python.optim" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.interface" />
-        <item index="1" class="java.lang.String" itemvalue="Python.eval_SPS" />
-        <item index="2" class="java.lang.String" itemvalue="Python.blocalignments" />
-        <item index="3" class="java.lang.String" itemvalue="Python.test" />
-        <item index="4" class="java.lang.String" itemvalue="Python.score" />
+        <item index="0" class="java.lang.String" itemvalue="Python.optim" />
+        <item index="1" class="java.lang.String" itemvalue="Python.interface" />
+        <item index="2" class="java.lang.String" itemvalue="Python.eval_SPS" />
+        <item index="3" class="java.lang.String" itemvalue="Python.blocalignments" />
+        <item index="4" class="java.lang.String" itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -342,13 +352,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/alignements_structuraux/readme.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/score.py" />
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/alignements.py" />
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/score.py" />
@@ -430,31 +433,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/interface.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1912">
-          <caret line="256" column="41" lean-forward="false" selection-start-line="256" selection-start-column="41" selection-end-line="256" selection-end-column="41" />
-          <folding>
-            <element signature="e#106#126#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/score.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-170">
           <caret line="49" column="47" lean-forward="false" selection-start-line="49" selection-start-column="47" selection-end-line="49" selection-end-column="47" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/eval_SPS.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="115" column="25" lean-forward="false" selection-start-line="115" selection-start-column="25" selection-end-line="115" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -478,8 +461,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/blocs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4180">
-          <caret line="35" column="4" lean-forward="false" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+        <state relative-caret-position="140">
+          <caret line="275" column="44" lean-forward="true" selection-start-line="275" selection-start-column="44" selection-end-line="275" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/eval_SPS.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="99" column="34" lean-forward="true" selection-start-line="99" selection-start-column="34" selection-end-line="99" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/interface.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="379" column="42" lean-forward="true" selection-start-line="379" selection-start-column="42" selection-end-line="379" selection-end-column="42" />
+          <folding>
+            <element signature="e#106#126#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4788">
+          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding />
         </state>
       </provider>

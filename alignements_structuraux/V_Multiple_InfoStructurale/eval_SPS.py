@@ -97,11 +97,14 @@ def score_SPS_computer (seqs, dico) :
     for i in range(nb_seq-1) :
         seq1 = seqs[i]
         seq2 = dico[seq1.getName()]
+        nb_col2 = seq2.getLength()
         j2 = 0
         for j in range(nb_col) :
             if 'id' in seq1.getAminoAcid(j):
-                while 'id' not in seq2.getAminoAcid(j2) :
+                while (j2 < nb_col2 and 'id' not in seq2.getAminoAcid(j2)) :
                     j2 += 1
+                if (j2 >= nb_col2):
+                    break
                 col = []
                 for k in range(i+1, nb_seq):
                     col += [(seqs[k].getAminoAcid(j), seqs[k].getName())]
@@ -112,9 +115,6 @@ def score_SPS_computer (seqs, dico) :
                         if 'id' in aa2 :
                             score += (aa[0]["id"] == aa2["id"])
                 j2 += 1
-                if(j2>=nb_col):
-                    break
-
     return score/score_ref
 
 
