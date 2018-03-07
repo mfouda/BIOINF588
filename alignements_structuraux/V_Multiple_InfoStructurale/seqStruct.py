@@ -83,7 +83,7 @@ def get_seq(path):
           'GLY', 'HIS', 'LEU', 'ARG', 'TRP',
           'ALA', 'VAL', 'GLU', 'TYR', 'MET']
     
-    ign = 0
+    
     for model in structure:
         for chain in model:
             for residue in chain:
@@ -102,10 +102,7 @@ def get_seq(path):
                     if(aminoacid["enfouissement"] > maxenf):
                         maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
-                    aminoacid["id"] = get_num(residue) - dico["res0"] - ign
                     seq[get_num(residue)] = aminoacid
-                else:
-                    ign += 1
     
     #print(seq)
     lines = open(path, "r").readlines()
@@ -125,8 +122,15 @@ def get_seq(path):
                 if(i in seq.keys()):
                     seq[i]["struct"] = "F"
     
+    idref = 0
     for key in seq.keys():
         seq[key]["enfouissement"] = 1 - seq[key]["enfouissement"] / maxenf
+        seq[key]["id"] = idref
+        idref += 1
+    
+    ID = [seq[k]["id"] for k in seq.keys()]
+    if(not sum([ID[k] == k for k in range(0, len(ID))])):
+        print("WARNING - problème id des séquences", path[4:-4], ID)
     
     return seq
 

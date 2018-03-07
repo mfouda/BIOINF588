@@ -195,7 +195,7 @@ def launchInterface():
                     aa["enfouissement"] = aaseq["enfouissement"]
                     SEQSmsf[i].setAminoAcid(k, aa)
                     n += 1
-                    
+ 
         return(SEQSmsf)
 
     def SPS_MSF():

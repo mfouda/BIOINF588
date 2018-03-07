@@ -97,18 +97,14 @@ def launchInterface():
                             else:
                                 d["name"] = "-"
                             SEQSmsffn[index].addAminoAcidAfter(d)
-                            
-#            for i in range(0, len(SEQSmsffn)):
-#                seq = seqStruct("pdb/" + SEQSmsffn[i].getName() + ".pdb")
-#                n = 0
-#                for k in range(0, SEQSmsffn[i].getLength()):
-#                    if("id" in SEQSmsffn[i].getAminoAcid(k)):
-#                        aa = SEQSmsffn[i].getAminoAcid(k).copy()
-#                        aaseq = seq.getAminoAcid(n).copy()
-#                        aa["struct"] = aaseq["struct"]
-#                        aa["enfouissement"] = aaseq["enfouissement"]
-#                        SEQSmsffn[i].setAminoAcid(k, aa)
-#                        n += 1
+                 
+            for seq in SEQSmsffn:
+                ID = []
+                for k in range(0, seq.getLength()):
+                    if(seq.getAminoAcid(k)["name"] != "-"):
+                        ID += [seq.getAminoAcid(k)["id"]]
+                if(not sum([ID[k] == k for k in range(0, len(ID))])):
+                    print("WARNING - problème id des séquences", seq.getName(), ID)   
             SEQSmsf[fn[-11:-4]] = SEQSmsffn            
 
     def searchfilename():
