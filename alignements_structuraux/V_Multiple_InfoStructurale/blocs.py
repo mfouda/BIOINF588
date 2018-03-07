@@ -177,7 +177,6 @@ class bloc:
         
     def add(self, bloc, scorer):
         maxi, index, isfrom = self.scoreIndexIsfrom(bloc, scorer)
-        print(index)
 #        if(index == [0, 0]):
 #            index = list(isfrom.shape)
 #            index[0] -= 1

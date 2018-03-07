@@ -70,9 +70,9 @@ class aminoAcidScorer:
             else:
                 coefmixte = 2
         else:
-            coefmixte = 4
+            coefmixte = 0.5
             
-        return ((coef1*coef2*coefmixte  - 0.5*0.5) / (4*1.5*1.5 - 0.5*0.5)) * self.blosum62(aa1, aa2)
+        return ((coef1*coef2*coefmixte  - 0.5*0.5*0.5) / (2*1.5*1.5 - 0.5*0.5*0.5)) * self.blosum62(aa1, aa2)
             
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
