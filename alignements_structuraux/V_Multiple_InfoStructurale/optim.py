@@ -17,7 +17,6 @@ import tkinter as tk
 import tkinter.filedialog as tkfd
 #import random as random
 import numpy as np
-import datetime
 from seqStruct import seqStruct
 from blocalignments import aligne_multiple
 from score import aminoAcidScorer
@@ -28,88 +27,7 @@ import random
 
 import warnings
 warnings.filterwarnings("ignore")
-    
-def showBloc(bloc):
-    # Création de la fenêtre principale (main window)
-    Mafenetre = tk.Tk()
-    
-    LINES = []
-    LINES += ['#The bloc has '+str(bloc.getNbSeqs())+' sequence'+"s"*(bloc.getNbSeqs() != 1)]
-    LINES += ['#The alignement is of lenght ' + str(bloc.getSeq(0).getLength())]
-    if(not np.isnan(bloc.score)):
-        LINES += ['#The last merging score is ' + str(bloc.score)]
-    LINES += ["#" + ''*30]
-    if('aSequenceHasNoName' in bloc.getNames()):
-        for i in range(0, bloc.getNbSeqs()):
-            LINES += [bloc.getSeq(i).toString() + " " + bloc.getDendo(i)]
-    else:
-         for i in range(0, bloc.getNbSeqs()):
-            LINES += [bloc.getSeq(i).toString() + " " + bloc.getName(i) + " "*(max([len(n) for n in bloc.getNames()]) - len(bloc.getName(i))) + " " + bloc.getDendo(i)]  
-    
-    # Création d'un widget Canvas (zone graphique)
-    lenbloc = len(bloc.getSeq(0).toString())
-    maxlen = max(len(str(LINES[i])) for i in range(0, len(LINES)))
-    Largeur = 10*maxlen
-    Hauteur = 20*len(LINES)
-    Canevas = tk.Canvas(Mafenetre, width = Largeur, height =Hauteur, bg ='white')
-    Canevas.pack(padx =5, pady =5)
-    numbloc = 0
-    for k in range(0, len(LINES)):
-        if(LINES[k][0] == "#"):
-           Canevas.create_text(10, 10 + (k / (len(LINES) - 1)) * (Hauteur - 20), anchor = tk.NW,
-                                text = LINES[k][1:], font=("Helvetica", 10), fill = "black")
-        else:
-            for i in range(0, len(LINES[k])):
-                if(i < lenbloc):
-                    aa = bloc.getSeq(numbloc).getAminoAcid(i)
-                    if(aa["struct"] == "H"):
-                        fill = "red"
-                    elif(aa["struct"] == "F"):
-                        fill = "blue"
-                    else:
-                        fill = "black"
-                else:
-                    fill = "black"
-                Canevas.create_text(10 + (i / (maxlen - 1)) * (Largeur - 20), 10 + (k / (len(LINES) - 1)) * (Hauteur - 20),
-                                    text = LINES[k][i], font=("Helvetica", 10), fill = fill)
-            numbloc += 1
-            
-    # Création d'un widget Button (bouton Quitter)
-    BoutonQuitter = tk.Button(Mafenetre, text ='Quitter', command = Mafenetre.destroy)
-    BoutonQuitter.pack(side = tk.LEFT, padx = 5, pady = 5)
-    
-    Mafenetre.mainloop()
 
-def showSEQS(SEQS):
-    # Création de la fenêtre principale (main window)
-    Mafenetre = tk.Tk()
-    
-    # Création d'un widget Canvas (zone graphique)
-    Largeur = 10*len(SEQS[0].toString())
-    Hauteur = 20*len(SEQS)
-    Canevas = tk.Canvas(Mafenetre, width = Largeur, height =Hauteur, bg ='white')
-    Canevas.pack(padx =5, pady =5)
-    
-    maxlen = max(len(SEQS[k].toString()) for k in range(0, len(SEQS)))
-    for k in range(0, len(SEQS)):
-        stringseq = SEQS[k].toString()
-        for i in range(0, len(stringseq)):
-            aa = SEQS[k].getAminoAcid(i)
-            if(aa["struct"] == "H"):
-                fill = "red"
-            elif(aa["struct"] == "F"):
-                fill = "blue"
-            else:
-                fill = "black"
-            Canevas.create_text(10 + (i / (maxlen - 1)) * (Largeur - 20), 10 + (k / (len(SEQS) - 1)) * (Hauteur - 20), 
-                                text = stringseq[i], font=("Helvetica", 10), fill = fill)
-            
-    # Création d'un widget Button (bouton Quitter)
-    BoutonQuitter = tk.Button(Mafenetre, text ='Quitter', command = Mafenetre.destroy)
-    BoutonQuitter.pack(side = tk.LEFT, padx = 5, pady = 5)
-    
-    Mafenetre.mainloop()  
-    
 def showProtein(name):
     seq = seqStruct("pdb/" + name + ".pdb")
     
@@ -145,27 +63,21 @@ def showProtein(name):
     
 def launchInterface():
     
-    logs = []
-    
     def Reset():
         global SEQS, params
         """ Efface la zone graphique et réinitialise tout"""
-        log(logs, "RESETING all variables")
+        print("RESETING all variables")
         SEQS = []
         params = dict()
         ButtonA['state'] = 'disable'
         ButtonAps['state'] = 'disable'
-        
-    def Effacer():
-        """ Efface la zone graphique """
-        logger.delete(tk.ALL)
     
     def msfToSeqs():
         global filename, SEQSmsf
         SEQSmsf = dict()
         for fn in filename:
             fn = fn[:-4] + ".msf"
-            log(logs, "Ouverture d'un .msf ...")
+            print("Ouverture de " + fn[-11:])
             lines = open(fn, 'r').readlines()
             
             names = []
@@ -197,17 +109,17 @@ def launchInterface():
                                 d["name"] = "-"
                             SEQSmsffn[index].addAminoAcidAfter(d)
                             
-            for i in range(0, len(SEQSmsffn)):
-                seq = seqStruct("pdb/" + SEQSmsffn[i].getName() + ".pdb")
-                n = 0
-                for k in range(0, SEQSmsffn[i].getLength()):
-                    if("id" in SEQSmsffn[i].getAminoAcid(k)):
-                        aa = SEQSmsffn[i].getAminoAcid(k).copy()
-                        aaseq = seq.getAminoAcid(n).copy()
-                        aa["struct"] = aaseq["struct"]
-                        aa["enfouissement"] = aaseq["enfouissement"]
-                        SEQSmsffn[i].setAminoAcid(k, aa)
-                        n += 1
+#            for i in range(0, len(SEQSmsffn)):
+#                seq = seqStruct("pdb/" + SEQSmsffn[i].getName() + ".pdb")
+#                n = 0
+#                for k in range(0, SEQSmsffn[i].getLength()):
+#                    if("id" in SEQSmsffn[i].getAminoAcid(k)):
+#                        aa = SEQSmsffn[i].getAminoAcid(k).copy()
+#                        aaseq = seq.getAminoAcid(n).copy()
+#                        aa["struct"] = aaseq["struct"]
+#                        aa["enfouissement"] = aaseq["enfouissement"]
+#                        SEQSmsffn[i].setAminoAcid(k, aa)
+#                        n += 1
             SEQSmsf[fn[-11:-4]] = SEQSmsffn            
 
     def searchfilename():
@@ -226,7 +138,7 @@ def launchInterface():
             useTFA()
         else:
             filename = []
-            log(logs, "Pas de .tfa dans le dossier")
+            print("Pas de .tfa dans le dossier")
         
     def useTFA():
         global SEQS, globalparams, filename
@@ -236,17 +148,15 @@ def launchInterface():
             fn = filename[i]
             try:
                 SEQSfn = []
-                log(logs, "Recherche de séquences dans le .tfa")
+                print("Recherche de séquences dans " + fn[-11:])
                 lines = open(fn, 'r').readlines()
                 #lines = [lines[i][:-2] for i in range(0, len(lines))]
                 for line in lines:
                     if(line[0] == ">"):
                         if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
-                            log(logs, "Downloading " + line[1:5] + ".pdb ...")
+                            print(" - - - - > Downloading " + line[1:5] + ".pdb ...")
                             path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
                             urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
-                        else:
-                            log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
                         SEQSfn += [seqStruct("pdb/" + line[1:5] + ".pdb")]
                 SEQS[fn[-11:-4]] = SEQSfn
             except (KeyError):
@@ -258,18 +168,11 @@ def launchInterface():
         globalparams = dict()
         ButtonA['state'] = 'normal'
         ButtonAps['state'] = 'normal'
-            
-    def log(logs, s):
-        Effacer()
-        logs += ["[" + str(datetime.datetime.now())[:-7] + "]    " + s]
-        nrows = int(Hauteur / 10)
-        for i in range(0, min(nrows, len(logs))):
-            logger.create_text(5, 5 + 1.1*(i / nrows) * (Hauteur - 10), text = logs[-i-1], anchor = tk.NW, font=("Helvetica", 9))
-    
+
     def addParams():
         global globalparams
         globalparams[str(key.get())] = [float(valuem.get()), float(valuep.get())]
-        log(logs, "Adding entry in params  {" + str(key.get()) + " : [" + str(valuem.get())+", "+str(valuep.get())+"]}")
+        print("Adding entry in params  {" + str(key.get()) + " : [" + str(valuem.get())+", "+str(valuep.get())+"]}")
         
     def optimize():
         global SEQS, globalparams, bloc, SEQSmsf, filename
@@ -277,7 +180,7 @@ def launchInterface():
         globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
         globalparams["extendGap"] = [float(oGm.get()), float(eGp.get())]
         
-        log(logs, "parameters : " + str(globalparams))
+        print("Parameters : " + str(globalparams))
         
         SPS = 0
         bestparams = dict()
@@ -290,7 +193,9 @@ def launchInterface():
             tmpSPS = 0
             for k in SEQS.keys():
                 scorer = aminoAcidScorer(str(sName.get()), params)
-                tmpSPS += SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer)) / len(SEQS)
+                tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
+                tmpSPS += tmptmpSPS / len(SEQS)
+                print(k, int(1000*tmptmpSPS)/1000)
             print(str(params), int(1000*tmpSPS)/1000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
@@ -388,12 +293,6 @@ def launchInterface():
     # Création d'un widget Button (bouton Quitter)
     BoutonQuitter = tk.Button(FrameABU, text ='Quitter', command = Mafenetre.destroy)
     BoutonQuitter.pack(padx = 5, pady = 5)
-    
-    # Création d'un widget Canvas (zone graphique) pour les messages log
-    Largeur = 600
-    Hauteur = 320
-    logger = tk.Canvas(Mafenetre, width = Largeur, height =Hauteur, bg ='white')
-    logger.pack(side = tk.BOTTOM, padx = 5, pady = 5)
     
     Mafenetre.mainloop()
     

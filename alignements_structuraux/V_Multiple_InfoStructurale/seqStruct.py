@@ -78,10 +78,16 @@ def get_seq(path):
     seq = dict()
     maxenf = 1e-10
     
+    AA = ['CYS', 'ASP', 'SER', 'GLN', 'LYS',
+          'ILE', 'PRO', 'THR', 'PHE', 'ASN',
+          'GLY', 'HIS', 'LEU', 'ARG', 'TRP',
+          'ALA', 'VAL', 'GLU', 'TYR', 'MET']
+    
+    ign = 0
     for model in structure:
         for chain in model:
             for residue in chain:
-                if(residue.get_resname() != "HOH" and residue.get_resname()[0] != " "):
+                if(residue.get_resname() in AA and residue.get_resname()[0] != " "):
                     aminoacid = dict()
                     aminoacid["name"] = convert_name_AA(residue.get_resname())
                     
@@ -96,22 +102,28 @@ def get_seq(path):
                     if(aminoacid["enfouissement"] > maxenf):
                         maxenf = aminoacid["enfouissement"]
                     aminoacid["struct"] = "V"
-                    aminoacid["id"] = get_num(residue) - dico["res0"]
+                    aminoacid["id"] = get_num(residue) - dico["res0"] - ign
                     seq[get_num(residue)] = aminoacid
+                else:
+                    ign += 1
     
+    #print(seq)
     lines = open(path, "r").readlines()
     for line in lines:
         if(line[:6] == "HELIX "):
-            start = int(line[22:25])
-            end = int(line[34:37])
+            start = int(line[21:25])
+            end = int(line[33:37])
+            #print(path[-8:], start, end)
             for i in range(start, end+1):
-                seq[i]["struct"] = "H"
+                if(i in seq.keys()):
+                    seq[i]["struct"] = "H"
                 
         if(line[:6] == "SHEET "):
             start = int(line[23:26])
             end = int(line[34:37])
             for i in range(start, end+1):
-                seq[i]["struct"] = "F"
+                if(i in seq.keys()):
+                    seq[i]["struct"] = "F"
     
     for key in seq.keys():
         seq[key]["enfouissement"] = 1 - seq[key]["enfouissement"] / maxenf
