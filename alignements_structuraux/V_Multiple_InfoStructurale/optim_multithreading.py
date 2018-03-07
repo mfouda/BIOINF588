@@ -16,7 +16,6 @@ Created on Tue Feb 13 16:19:10 2018
 import tkinter as tk
 import tkinter.filedialog as tkfd
 #import random as random
-import numpy as np
 from seqStruct import seqStruct
 from blocalignments import aligne_multiple
 from score import aminoAcidScorer
@@ -27,6 +26,50 @@ import random
 
 import warnings
 warnings.filterwarnings("ignore")
+
+import sys
+from threading import Thread
+import time
+
+class Afficheur(Thread):
+
+    """Thread chargé simplement d'afficher une lettre dans la console."""
+
+    def __init__(self, lettre):
+        Thread.__init__(self)
+        self.lettre = lettre
+        self.value = 0
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        self.value = self.lettre ** 2
+        attente = 0.2
+        attente += random.randint(1, 120) / 100
+        time.sleep(attente)
+        print(self.value)
+
+    def getValue(self):
+        return self.value
+
+class ALIGNEMENT_SCORE(Thread):
+
+    """Thread chargé simplement d'afficher une lettre dans la console."""
+
+    def __init__(self, VAL):
+        Thread.__init__(self)
+        self.msf = VAL[0]
+        self.seqs = VAL[1]
+        self.scorer = VAL[2]
+        self.label = VAL[3]
+        self.score = 0
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        self.score = SPS_romainTuned(self.msf, aligne_multiple(self.seqs, self.scorer))
+        print(self.label, int(1000*self.score)/1000)
+        
+    def getScore(self):
+        return self.score
 
 def showProtein(name):
     seq = seqStruct("pdb/" + name + ".pdb")
@@ -191,11 +234,31 @@ def launchInterface():
                 params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
             print("Iteration", i, str(params))
             tmpSPS = 0
-            for k in SEQS.keys():
-                scorer = aminoAcidScorer(str(sName.get()), params)
-                tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
-                tmpSPS += tmptmpSPS / len(SEQS)
-                print(k, int(1000*tmptmpSPS)/1000)
+            T = []
+            keys = [1, 2, 3, 4, 5, 6]
+            
+#            for k in range(0, len(keys)):
+#                T += [Afficheur(keys[k])]
+#            for k in range(0, len(keys)):
+#                T[k].start()
+#            for k in range(0, len(keys)):
+#                T[k].join()
+            
+            scorer = aminoAcidScorer(str(sName.get()), params)
+            keys = list(SEQS.keys())
+            for k in range(0, len(keys)):
+                key = keys[k]
+                T += [ALIGNEMENT_SCORE([SEQSmsf[key], SEQS[key], scorer, key])]
+            for k in range(0, len(keys)):
+                T[k].start()
+            for k in range(0, len(keys)):
+                T[k].join()   
+            for k in range(0, len(keys)):
+                tmpSPS += T[k].getScore() / len(SEQS)
+#            for k in SEQS.keys():
+#                tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
+#                tmpSPS += tmptmpSPS / len(SEQS)
+#                print(i, k, int(1000*tmptmpSPS)/1000)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
