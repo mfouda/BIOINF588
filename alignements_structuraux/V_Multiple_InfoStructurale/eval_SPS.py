@@ -127,8 +127,8 @@ def test_SPS(filename, scorer) :
     ref = msftoDict('../RV11/' + filename + '.msf')
     print(SPS(ref, our_bloc))
 
-import score
-scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
-##scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-test_SPS('BB11001', scorer1)
+#import score
+#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
+###scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+#test_SPS('BB11001', scorer1)
 

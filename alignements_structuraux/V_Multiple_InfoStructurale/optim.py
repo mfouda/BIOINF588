@@ -25,6 +25,9 @@ import urllib.request as urllib
 import os as os
 from eval_SPS import SPS_romainTuned
 import random
+
+import warnings
+warnings.filterwarnings("ignore")
     
 def showBloc(bloc):
     # Création de la fenêtre principale (main window)
@@ -158,61 +161,55 @@ def launchInterface():
         logger.delete(tk.ALL)
     
     def msfToSeqs():
-        global filename
-        filenamemsf = filename[:-4] + ".msf"
-        log(logs, "Ouverture d'un .msf ...")
-        lines = open(filenamemsf, 'r').readlines()
-        
-        names = []
-        i = 6
-        while(lines[i][:5] == ' Name'):
-            names += [lines[i][7:11]]
-            i += 1
-        
-        SEQSmsf = []
-        last = dict()
-        for i in range(0, len(names)):
-            SEQSmsf += [seqStruct()]
-            SEQSmsf[-1].setName(names[i])
-            last[names[i]] = 0
-        
-        for line in lines:
-            if(line[:4] in names):
-                index = names.index(line[:4])
-                words = line.split()
-                for word in words[1:] :
-                    for aa in word :
-                        d = dict()
-                        d["name"] = aa
-                        d["struct"] = "V"
-                        if(aa != "."):
-                            d["id"]=last[line[:4]]
-                            last[line[:4]] += 1
-                        else:
-                            d["name"] = "-"
-                        SEQSmsf[index].addAminoAcidAfter(d)
-                        
-        for i in range(0, len(SEQSmsf)):
-            seq = seqStruct("pdb/" + SEQSmsf[i].getName() + ".pdb")
-            n = 0
-            for k in range(0, SEQSmsf[i].getLength()):
-                if("id" in SEQSmsf[i].getAminoAcid(k)):
-                    aa = SEQSmsf[i].getAminoAcid(k).copy()
-                    aaseq = seq.getAminoAcid(n).copy()
-                    aa["struct"] = aaseq["struct"]
-                    aa["enfouissement"] = aaseq["enfouissement"]
-                    SEQSmsf[i].setAminoAcid(k, aa)
-                    n += 1
-                    
-        return(SEQSmsf)
+        global filename, SEQSmsf
+        SEQSmsf = dict()
+        for fn in filename:
+            fn = fn[:-4] + ".msf"
+            log(logs, "Ouverture d'un .msf ...")
+            lines = open(fn, 'r').readlines()
+            
+            names = []
+            i = 6
+            while(lines[i][:5] == ' Name'):
+                names += [lines[i][7:11]]
+                i += 1
+            
+            SEQSmsffn = []
+            last = dict()
+            for i in range(0, len(names)):
+                SEQSmsffn += [seqStruct()]
+                SEQSmsffn[-1].setName(names[i])
+                last[names[i]] = 0
+            
+            for line in lines:
+                if(line[:4] in names):
+                    index = names.index(line[:4])
+                    words = line.split()
+                    for word in words[1:] :
+                        for aa in word :
+                            d = dict()
+                            d["name"] = aa
+                            d["struct"] = "V"
+                            if(aa != "."):
+                                d["id"]=last[line[:4]]
+                                last[line[:4]] += 1
+                            else:
+                                d["name"] = "-"
+                            SEQSmsffn[index].addAminoAcidAfter(d)
+                            
+            for i in range(0, len(SEQSmsffn)):
+                seq = seqStruct("pdb/" + SEQSmsffn[i].getName() + ".pdb")
+                n = 0
+                for k in range(0, SEQSmsffn[i].getLength()):
+                    if("id" in SEQSmsffn[i].getAminoAcid(k)):
+                        aa = SEQSmsffn[i].getAminoAcid(k).copy()
+                        aaseq = seq.getAminoAcid(n).copy()
+                        aa["struct"] = aaseq["struct"]
+                        aa["enfouissement"] = aaseq["enfouissement"]
+                        SEQSmsffn[i].setAminoAcid(k, aa)
+                        n += 1
+            SEQSmsf[fn[-11:-4]] = SEQSmsffn            
 
-    def SPS_MSF():
-        global bloc
-        log(logs, "SPS score = " + str(SPS_romainTuned(msfToSeqs(), bloc)))
-        
-    def checkMSF():
-        showSEQS(msfToSeqs())
-        
     def searchfilename():
         global filename
         filename = [tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .tfa", filetypes=[('tfa files','.tfa'),('all files','.*')])]
@@ -224,7 +221,7 @@ def launchInterface():
         filename = []
         for fn in os.listdir(filedir):
             if(fn[-4:] == ".tfa"):
-                filename += [filedir + fn]
+                filename += [filedir + "/" + fn]
         if(len(filename) != 0):
             useTFA()
         else:
@@ -234,48 +231,33 @@ def launchInterface():
     def useTFA():
         global SEQS, globalparams, filename
         
-        if(len(filename) == 1):
-            filename= filename[0]
-            log(logs, "Recherche de séquences dans le .tfa")
-            SEQS = []
-            lines = open(filename, 'r').readlines()
-            #lines = [lines[i][:-2] for i in range(0, len(lines))]
-            for line in lines:
-                if(line[0] == ">"):
-                    if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
-                        log(logs, "Downloading " + line[1:5] + ".pdb ...")
-                        path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
-                        urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
-                    else:
-                        log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
-                    SEQS += [seqStruct("pdb/" + line[1:5] + ".pdb")]
-                
-            globalparams = dict()
-            ButtonA['state'] = 'normal'
-            ButtonAps['state'] = 'normal'
-            showSEQS(SEQS)
-        
-        else:
-#            SEQS = []
-#            for fn in filename:
-#                log(logs, "Recherche de séquences dans le .tfa")
-#                lines = open(filename, 'r').readlines()
-#                #lines = [lines[i][:-2] for i in range(0, len(lines))]
-#                for line in lines:
-#                    if(line[0] == ">"):
-#                        if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
-#                            log(logs, "Downloading " + line[1:5] + ".pdb ...")
-#                            path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
-#                            urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
-#                        else:
-#                            log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
-#                        SEQS += [seqStruct("pdb/" + line[1:5] + ".pdb")]
-#                    
-#                globalparams = dict()
-#                ButtonA['state'] = 'normal'
-#                ButtonAps['state'] = 'normal'
-#                showSEQS(SEQS)
-            print("RESTE A IMPLEMENTER pour plusieurs .tfa")
+        SEQS = dict()
+        for i in range(0, len(filename)):
+            fn = filename[i]
+            try:
+                SEQSfn = []
+                log(logs, "Recherche de séquences dans le .tfa")
+                lines = open(fn, 'r').readlines()
+                #lines = [lines[i][:-2] for i in range(0, len(lines))]
+                for line in lines:
+                    if(line[0] == ">"):
+                        if(line[1:5] + ".pdb" not in os.listdir("pdb/")):
+                            log(logs, "Downloading " + line[1:5] + ".pdb ...")
+                            path = "https://files.rcsb.org/download/" + line[1:5] + ".pdb"
+                            urllib.urlretrieve(path, "pdb/" + line[1:5] + ".pdb")
+                        else:
+                            log(logs, "Protein " + line[1:5] + ".pdb already downloaded before")
+                        SEQSfn += [seqStruct("pdb/" + line[1:5] + ".pdb")]
+                SEQS[fn[-11:-4]] = SEQSfn
+            except (KeyError):
+                print(fn[-11:] + " ERROR - Fichier .tfa illisible ")
+                filename = filename[:i] + filename[i+1:]
+            except (urllib.HTTPError):
+                print(fn[-11:] + " ERROR - Fichier .pdb impossible a télécharger")
+                filename = filename[:i] + filename[i+1:]
+        globalparams = dict()
+        ButtonA['state'] = 'normal'
+        ButtonAps['state'] = 'normal'
             
     def log(logs, s):
         Effacer()
@@ -290,8 +272,8 @@ def launchInterface():
         log(logs, "Adding entry in params  {" + str(key.get()) + " : [" + str(valuem.get())+", "+str(valuep.get())+"]}")
         
     def optimize():
-        global SEQS, globalparams, bloc
-        
+        global SEQS, globalparams, bloc, SEQSmsf, filename
+        msfToSeqs()
         globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
         globalparams["extendGap"] = [float(oGm.get()), float(eGp.get())]
         
@@ -300,20 +282,21 @@ def launchInterface():
         SPS = 0
         bestparams = dict()
         
-        for i in range(0, 5):
+        for i in range(0, int(niter.get())):
             params = dict()
             for k, v in globalparams.items():
                 params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
-                print(k, v, params[k])
-            scorer = aminoAcidScorer(str(sName.get()), params)
-            b = aligne_multiple(SEQS, scorer)
-            print("alignement terminé")
-            tmpSPS = SPS_romainTuned(msfToSeqs(), b)
+            
+            tmpSPS = 0
+            for k in SEQS.keys():
+                scorer = aminoAcidScorer(str(sName.get()), params)
+                tmpSPS += SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer)) / len(SEQS)
+            print(str(params), int(1000*tmpSPS)/1000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
                 bestparams = params
                 
-        print(bestparams)
+        print(bestparams, SPS)
             
     # Création de la fenêtre principale (main window)
     Mafenetre = tk.Tk()
@@ -356,7 +339,7 @@ def launchInterface():
     eGp.set(5)
     TextVareGp = tk.Entry(FrameSS, textvariable=eGp, width=10)
     eGm = tk.StringVar()
-    eGm.set(1)
+    eGm.set(0.5)
     TextVareGm = tk.Entry(FrameSS, textvariable=eGm, width=10)
     #TextVaroG.pack(padx=2,pady=2)
     TextVareGp.grid(row =2, column =1, padx=1,pady=1)
@@ -386,6 +369,13 @@ def launchInterface():
     ButtonAps = tk.Button(FrameAps,text="Add parameter",fg='navy',command=addParams, state=tk.DISABLED)
     ButtonAps.pack(padx=2,pady=2)
     
+    FrameSO = tk.Frame(FrameS,borderwidth=2)
+    FrameSO.pack(padx=2,pady=2)
+    tk.Label(FrameSO, text = 'iterations').grid(row =0, column =0, padx=1,pady=1)
+    niter = tk.StringVar()
+    niter.set(5)
+    TextVarvalueniter = tk.Entry(FrameSO, textvariable=niter, width=10)
+    TextVarvalueniter.grid(row =0, column =1, padx=1,pady=1)
     ButtonA = tk.Button(FrameS,text="Optimiser",fg='navy',command=optimize, state=tk.DISABLED)
     ButtonA.pack(side = tk.BOTTOM, padx=2,pady=2)
     
