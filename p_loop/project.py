@@ -361,6 +361,14 @@ def findStructureFromsUniprotCode(uniprotCode):
 #uniprotCode = findUniprotCodeFromName(name)
 #findStructureFromsUniprotCode(uniprotCode)
 ##################################
+    
+# Question 7 :  Quelles sont celles de la levure ?
+    
+# Question 8 :  Structures semblables grace au programme SSM de l'EBI ?
+    
+#On nous donne les mêmes : 2gaa et 2ga8
+#FONCTION ???
+
 
 
 
