@@ -28,39 +28,28 @@ import random
 import warnings
 warnings.filterwarnings("ignore")
 
-def showProtein(name):
-    seq = seqStruct("pdb/" + name + ".pdb")
-    
-    # Création de la fenêtre principale (main window)
-    Mafenetre = tk.Tk()
-    Mafenetre.title('Protein '+name)   
-    
-    # Création d'un widget Canvas (zone graphique)
-    Largeur = 10*len(seq.toString())
-    Hauteur = 100
-    Canevas = tk.Canvas(Mafenetre, width = Largeur, height =Hauteur, bg ='white')
-    Canevas.pack(padx =5, pady =5)
-    
-    stringseq = seq.toString()
-    for i in range(0, len(stringseq)):
-        aa = seq.getAminoAcid(i)
-        if(aa["struct"] == "H"):
-            fill = "red"
-        elif(aa["struct"] == "F"):
-            fill = "blue"
-        else:
-            fill = "black"
-        Canevas.create_text(10 + (i / (len(stringseq) - 1)) * (Largeur - 20), 15, 
-                            text = stringseq[i], font=("Helvetica", 10), fill = fill)
-        if(i != len(stringseq) - 1):
-            Canevas.create_line(10 + (i / (len(stringseq) - 1)) * (Largeur - 20), 95 - 75 * seq.getAminoAcid(i)["enfouissement"],
-                                10 + ((i + 1) / (len(stringseq) - 1)) * (Largeur - 20), 95 - 75 * seq.getAminoAcid(i + 1)["enfouissement"])
-    # Création d'un widget Button (bouton Quitter)
-    BoutonQuitter = tk.Button(Mafenetre, text ='Quitter', command = Mafenetre.destroy)
-    BoutonQuitter.pack(side = tk.LEFT, padx = 5, pady = 5)
-    
-    Mafenetre.mainloop()  
-    
+from threading import Thread
+
+class ALIGNEMENT_SCORE(Thread):
+
+    """Thread chargé simplement d'afficher une lettre dans la console."""
+
+    def __init__(self, VAL):
+        Thread.__init__(self)
+        self.msf = VAL[0]
+        self.seqs = VAL[1]
+        self.scorer = VAL[2]
+        self.label = VAL[3]
+        self.score = 0
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        self.score = SPS_romainTuned(self.msf, aligne_multiple(self.seqs, self.scorer))
+        print(self.label, int(1000*self.score)/1000)
+        
+    def getScore(self):
+        return self.score
+
 def launchInterface():
     
     def Reset():
@@ -190,12 +179,21 @@ def launchInterface():
             for k, v in globalparams.items():
                 params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
             print("Iteration", i, str(params))
-            tmpSPS = 0
-            for k in SEQS.keys():
-                scorer = aminoAcidScorer(str(sName.get()), params)
-                tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
-                tmpSPS += tmptmpSPS / len(SEQS)
-                print(k, int(1000*tmptmpSPS)/1000)
+            
+            scorer = aminoAcidScorer(str(sName.get()), params)
+            if(multithreading.get()):
+                keys = list(SEQS.keys())
+                T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), scorer, keys[k]]) for k in range(0, len(keys))]
+                [T[k].start() for k in range (0, len(keys))]
+                [T[k].join() for k in range (0, len(keys))]
+                tmpSPS = sum(T[k].getScore() for k in range(0, len(keys))) / len(SEQS)
+            
+            else:
+                tmpSPS = 0
+                for k in SEQS.keys():
+                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
+                    tmpSPS += tmptmpSPS / len(SEQS)
+                    print(k, int(1000*tmptmpSPS)/1000)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
@@ -281,6 +279,10 @@ def launchInterface():
     niter.set(5)
     TextVarvalueniter = tk.Entry(FrameSO, textvariable=niter, width=10)
     TextVarvalueniter.grid(row =0, column =1, padx=1,pady=1)
+    
+    multithreading = tk.IntVar()
+    c = tk.Checkbutton(FrameS, text="Multi threading", variable=multithreading, onvalue = True, offvalue = False)
+    c.pack()
     ButtonA = tk.Button(FrameS,text="Optimiser",fg='navy',command=optimize, state=tk.DISABLED)
     ButtonA.pack(side = tk.BOTTOM, padx=2,pady=2)
     
