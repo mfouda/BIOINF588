@@ -15,6 +15,7 @@ import random
 import pandas as pd
 from pandas import ExcelWriter
 from pandas import ExcelFile
+import time
  
 
 class bloc:
@@ -84,16 +85,15 @@ class bloc:
         print('#'*30)
         
     def aminoAcidScore(self, col1, col2, scorer):
-        aaScore = 0
+#        aaScore = 0
+#        for i in range(0, len(col1)):
+#            for j in range(0, len(col2)):
+#                aaScore += scorer.computeScore(col1[i], col2[j])
+#        return aaScore / (len(col1)*len(col2))
         
-        for i in range(0, len(col1)):
-            for j in range(0, len(col2)):
-                aaScore += scorer.computeScore(col1[i], col2[j])
-                
-        return aaScore / (len(col1)*len(col2))     
+        return sum([sum([scorer.computeScore(col1[i], col2[j]) for i in range(0, len(col1))]) for j in range(0, len(col2))]) / (len(col1)*len(col2))     
     
     def scoreIndexIsfrom(self, bloc, scorer):
-        
         size = (self.getSeq(0).getLength() + 1, bloc.getSeq(0).getLength() + 1)
         m = np.zeros(size).astype(int)
         ix = np.zeros(size).astype(int)
@@ -104,8 +104,15 @@ class bloc:
         minus = dict({"name" : "-", "struct" : "V", "enfouissement" : 0})
         plus = dict({"name" : "+", "struct" : "V", "enfouissement" : 0})
         
-        ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
-        db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
+        Es = np.array([self.aminoAcidScore(self.getCol(i), [minus], scorer) for i in range(0, self.getLength())])
+        Os = np.array([self.aminoAcidScore(self.getCol(i), [plus], scorer) for i in range(0, self.getLength())])
+        Eb = np.array([self.aminoAcidScore(bloc.getCol(i), [minus], scorer) for i in range(0, bloc.getLength())])
+        Ob = np.array([self.aminoAcidScore(bloc.getCol(i), [plus], scorer) for i in range(0, bloc.getLength())])      
+        
+#        ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
+#        db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
+        ds = Os[0]
+        db = Ob[0]
         m[1, 0] = ds
         m[0, 1] = db
         ix[1, 0] = ds
@@ -116,7 +123,8 @@ class bloc:
         isfrom[1, 0] = 1
         
         for i in range(1, self.getSeq(0).getLength()):     #Calcul de la première ligne
-            e = self.aminoAcidScore(self.getCol(i), [minus], scorer)
+#            e = self.aminoAcidScore(self.getCol(i), [minus], scorer)
+            e = Es[i]
             m[i+1, 0] = m[i, 0] + e
             ix[i+1, 0] = ix[i, 0] + e
             iy[i+1, 0] = iy[i, 0] + e
@@ -129,7 +137,8 @@ class bloc:
 #        isfrom[0,2:] = [m[i-1] + E[i] for i in range(2, bloc.getLength())]
         
         for j in range(1, bloc.getSeq(0).getLength()):     #Calcul de la première colonne
-            e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
+#            e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
+            e = Eb[j]
             m[0, j+1] = m[0, j] + e
             ix[0, j+1] = ix[0, j] + e
             iy[0, j+1] = iy[0, j] + e
@@ -142,33 +151,40 @@ class bloc:
             coli = self.getCol(i)
             for j in range(0, bloc.getSeq(0).getLength()):
                 colj = bloc.getCol(j)
-                
                 blosum = self.aminoAcidScore(coli, colj, scorer)
-                
+
                 #Calcul de m[i+1, j+1]
-                score = max([iy[i, j], m[i, j], ix[i, j]]) + blosum
-                m[i+1, j+1] = score
+                #score = max([iy[i, j], m[i, j], ix[i, j]]) + blosum
+                score = m[i, j]
+                if(ix[i, j] > score):
+                    score = ix[i, j]
+                if(iy[i, j] > score):
+                    score = iy[i, j]
+                m[i+1, j+1] = score + blosum
                 
-                if(score >= maxi):
-                    if((j + 1 == bloc.getSeq(0).getLength()) or (i + 1 == self.getSeq(0).getLength())):
+                if(((j + 1 == bloc.getSeq(0).getLength()) or (i + 1 == self.getSeq(0).getLength())) and 
+                   score >= maxi):
                         maxi = score
                         index = [i+1, j+1]
-                
+                        
                 #Calcul de ix[i+1, j+1] et iy[i+1, j+1]
                 #ix[i+1, j+1] = max(m[i, j + 1] - scorer.getParams()["openGap"], ix[i, j + 1] - scorer.getParams()["extendGap"])
                 #iy[i+1, j+1] = max(m[i + 1, j] - scorer.getParams()["openGap"], iy[i + 1, j] - scorer.getParams()["extendGap"])
-                ix[i+1, j+1] = max(m[i, j + 1] + self.aminoAcidScore(coli, [plus], scorer),
-                                  ix[i, j + 1] + self.aminoAcidScore(coli, [minus], scorer))
-                iy[i+1, j+1] = max(m[i + 1, j] + self.aminoAcidScore(colj, [plus], scorer),
-                                  iy[i + 1, j] + self.aminoAcidScore(colj, [minus], scorer))
+
+#                ix[i+1, j+1] = max(m[i, j + 1] + self.aminoAcidScore(coli, [plus], scorer),
+#                                  ix[i, j + 1] + self.aminoAcidScore(coli, [minus], scorer))
+#                iy[i+1, j+1] = max(m[i + 1, j] + self.aminoAcidScore(colj, [plus], scorer),
+#                                  iy[i + 1, j] + self.aminoAcidScore(colj, [minus], scorer))
+                ix[i+1, j+1] = max(m[i, j + 1] + Os[i], ix[i, j + 1] + Es[i])
+                iy[i+1, j+1] = max(m[i + 1, j] + Ob[j], iy[i + 1, j] + Eb[j])
                 
                 #Calcul de isfrom[i+1, j+1]
-                isfrom[i+1, j+1] = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
-                if(iy[i+1, j+1] == m[i+1, j+1]):
+                #isfrom[i+1, j+1] = np.argmax([iy[i+1, j+1], m[i+1, j+1], ix[i+1, j+1]]) - 1
+                isfrom[i+1, j+1] = 0
+                if(iy[i+1, j+1] >= m[i+1, j+1]):
                     isfrom[i+1, j+1] = -1
-                if(iy[i+1, j+1] == m[i+1, j+1]):
-                    isfrom[i+1, j+1] = -1
-            
+                if(ix[i+1, j+1] >= m[i+1, j+1]):
+                    isfrom[i+1, j+1] = 1
 #        writer = ExcelWriter('pickleObjects/test' + str(datetime.datetime.now())[:10] +
 #                             "_" + str(datetime.datetime.now())[11:13] +
 #                             "_" + str(datetime.datetime.now())[14:16] +
@@ -178,7 +194,6 @@ class bloc:
 #        pd.DataFrame(iy).to_excel(writer,'Sheet3',index=False)
 #        pd.DataFrame(isfrom).to_excel(writer,'Sheet4',index=False)
 #        writer.save()
-
         return maxi, index, isfrom
         
     def add(self, bloc, scorer):

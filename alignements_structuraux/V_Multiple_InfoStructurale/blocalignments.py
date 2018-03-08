@@ -20,9 +20,7 @@ def aligne_multiple(seqs, scorer):
     #on remplit avec les scores initiaux
     for i in range(n):
         for j in range(i):
-            tt = time.time()
             scores[i, j] = list_blocs[i].alignementscore(list_blocs[j], scorer)
-            print(time.time() - tt)
             
     for i in range(0, n-1):
         #trouve le score maximal et les vecteurs qui le réalisent : x et y
@@ -31,18 +29,22 @@ def aligne_multiple(seqs, scorer):
         mini , maxi = min(x, y), max(x, y)
         #réalise la fusion de x et y, remplace le plus petit par la fusion et le plus grand sort du tableau (est remplacé par des nan)
         s = list_blocs[mini].add(list_blocs[maxi], scorer)
+#        scores[maxi,:].fill(np.nan)
+#        scores[:,maxi].fill(np.nan)
+#        for j in range(n):
+            #on remplit la ligne et la colonne de min la où il n'y a pas de nan
+#            if not (np.isnan(scores[mini, j])):
+#                scores[mini,j] = list_blocs[mini].alignementscore(list_blocs[j], scorer)
+#            if not (np.isnan(scores[j, mini])):
+#                scores[j,mini] = list_blocs[j].alignementscore(list_blocs[mini], scorer)
+        for j in range(n):
+            tmp1 = list_blocs[maxi].getNbSeqs()
+            tmp2 = list_blocs[mini].getNbSeqs() - tmp1
+            s = (scores[mini,j] * tmp2 + scores[maxi,j] * tmp1) / (tmp1 + tmp2)
+            scores[mini,j] = s
+            scores[mini,j] = s
         scores[maxi,:].fill(np.nan)
         scores[:,maxi].fill(np.nan)
-        for j in range(n):
-            #on remplit la ligne et la colonne de min la où il n'y a pas de nan
-            if not (np.isnan(scores[mini, j])):
-                tt = time.time()
-                scores[mini,j] = list_blocs[mini].alignementscore(list_blocs[j], scorer)
-                print(time.time() - tt)
-            if not (np.isnan(scores[j, mini])):
-                tt = time.time()
-                scores[j,mini] = list_blocs[j].alignementscore(list_blocs[mini], scorer)
-                print(time.time() - tt)
         #actualise le cout
         score_alignement += s
     return list_blocs[0]

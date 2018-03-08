@@ -189,12 +189,9 @@ def launchInterface():
                 for k in SEQS.keys():
                     tt = time.time()
                     b = aligne_multiple(SEQS[k], scorer)
-                    print("Alignement", time.time() - tt)
-                    tt = time.time()
                     tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
-                    print("SPS", time.time() - tt)
                     tmpSPS += tmptmpSPS / len(SEQS)
-                    print(k, int(1000*tmptmpSPS)/1000)
+                    print(k, int(1000*tmptmpSPS)/1000, time.time() - tt)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
