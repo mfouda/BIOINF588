@@ -121,7 +121,13 @@ class bloc:
             ix[i+1, 0] = ix[i, 0] + e
             iy[i+1, 0] = iy[i, 0] + e
             isfrom[i+1, 0] = 1
-            
+        
+#        E = [self.aminoAcidScore(bloc.getCol(j), [minus], scorer) for j in range(0, bloc.getLength())]
+#        m[0,2:] = [m[i-1] + E[i] for i in range(2, bloc.getLength())]
+#        ix[0,2:] = [m[i-1] + E[i] for i in range(2, bloc.getLength())]
+#        iy[0,2:] = [m[i-1] + E[i] for i in range(2, bloc.getLength())]
+#        isfrom[0,2:] = [m[i-1] + E[i] for i in range(2, bloc.getLength())]
+        
         for j in range(1, bloc.getSeq(0).getLength()):     #Calcul de la première colonne
             e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
             m[0, j+1] = m[0, j] + e
@@ -250,7 +256,6 @@ class bloc:
         self.seqs = seqs        
         self.nbSeqs = self.getNbSeqs() + bloc.getNbSeqs()
         self.score = maxi
-        
         
         dendo1 = self.getDendos()
         dendo2 = bloc.getDendos()

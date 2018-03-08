@@ -65,6 +65,7 @@ class aminoAcidScorer:
         coef1 = 1.5 - aa1["enfouissement"]
         coef2 = 1.5 - aa2["enfouissement"]
         enf = self.getParams()["enf"] * coef1 * coef2
+        
         if(aa1["struct"] == aa2["struct"]):
             if(aa1["struct"] == "V"):
                 coefmixte = self.getParams()["m1"]

@@ -24,7 +24,7 @@ import urllib.request as urllib
 import os as os
 from eval_SPS import SPS_romainTuned
 import random
-
+import time
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -176,18 +176,23 @@ def launchInterface():
                 params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
             print("Iteration", i, str(params))
             
-            scorer = aminoAcidScorer(str(sName.get()), params)
             if(multithreading.get()):
                 keys = list(SEQS.keys())
-                T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), scorer, keys[k]]) for k in range(0, len(keys))]
+                T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), aminoAcidScorer(str(sName.get()), params), keys[k]]) for k in range(0, len(keys))]
                 [T[k].start() for k in range (0, len(keys))]
                 [T[k].join() for k in range (0, len(keys))]
                 tmpSPS = sum(T[k].getScore() for k in range(0, len(keys))) / len(SEQS)
             
             else:
                 tmpSPS = 0
+                scorer = aminoAcidScorer(str(sName.get()), params)
                 for k in SEQS.keys():
-                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], aligne_multiple(SEQS[k], scorer))
+                    tt = time.time()
+                    b = aligne_multiple(SEQS[k], scorer)
+                    print("Alignement", time.time() - tt)
+                    tt = time.time()
+                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
+                    print("SPS", time.time() - tt)
                     tmpSPS += tmptmpSPS / len(SEQS)
                     print(k, int(1000*tmptmpSPS)/1000)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
@@ -277,7 +282,7 @@ def launchInterface():
     TextVarvalueniter.grid(row =0, column =1, padx=1,pady=1)
     
     multithreading = tk.IntVar()
-    c = tk.Checkbutton(FrameS, text="Multi threading", variable=multithreading, onvalue = True, offvalue = False)
+    c = tk.Checkbutton(FrameS, text="Multi threading", variable=multithreading, onvalue = True, offvalue = False, state=tk.DISABLED)
     c.pack()
     ButtonA = tk.Button(FrameS,text="Optimiser",fg='navy',command=optimize, state=tk.DISABLED)
     ButtonA.pack(side = tk.BOTTOM, padx=2,pady=2)

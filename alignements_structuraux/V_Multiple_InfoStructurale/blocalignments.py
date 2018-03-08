@@ -4,6 +4,7 @@ import Bio.SubsMat.MatrixInfo
 from blocs import bloc  
 from seqStruct import seqStruct
 from score import aminoAcidScorer
+import time
 
 def aligne_multiple(seqs, scorer):
     score_alignement = 0
@@ -19,7 +20,9 @@ def aligne_multiple(seqs, scorer):
     #on remplit avec les scores initiaux
     for i in range(n):
         for j in range(i):
+            tt = time.time()
             scores[i, j] = list_blocs[i].alignementscore(list_blocs[j], scorer)
+            print(time.time() - tt)
             
     for i in range(0, n-1):
         #trouve le score maximal et les vecteurs qui le réalisent : x et y
@@ -33,9 +36,13 @@ def aligne_multiple(seqs, scorer):
         for j in range(n):
             #on remplit la ligne et la colonne de min la où il n'y a pas de nan
             if not (np.isnan(scores[mini, j])):
+                tt = time.time()
                 scores[mini,j] = list_blocs[mini].alignementscore(list_blocs[j], scorer)
+                print(time.time() - tt)
             if not (np.isnan(scores[j, mini])):
+                tt = time.time()
                 scores[j,mini] = list_blocs[j].alignementscore(list_blocs[mini], scorer)
+                print(time.time() - tt)
         #actualise le cout
         score_alignement += s
     return list_blocs[0]
