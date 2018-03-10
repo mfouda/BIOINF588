@@ -270,6 +270,12 @@ def launchInterface():
         global SEQS, params, bloc
         params["openGap"] = float(oG.get())
         params["extendGap"] = float(eG.get())
+
+        params["enf"] = 1
+        params["struct"] = 10
+        params["vrac"] = 3
+
+
         scorer = aminoAcidScorer(str(sName.get()), params)
         log(logs, "scorer : " + scorer.getName() + " " + str(scorer.getParams()))
         log(logs, "Alignement des séquences en cours ...")
