@@ -73,9 +73,8 @@ class aminoAcidScorer:
         return (1 + coef_enf + coef_mixte) * result_temp
     
     def testRomain(self, aa1, aa2):
-        coef1 = 1.5 - aa1["enfouissement"]
-        coef2 = 1.5 - aa2["enfouissement"]
-        enf = self.getParams()["enf"] * coef1 * coef2
+        coefenf = 1 - (aa1["enfouissement"] - aa2["enfouissement"])**2
+        enf = self.getParams()["enf"] * coefenf
         
         if(aa1["struct"] == aa2["struct"]):
             if(aa1["struct"] == "V"):
@@ -84,9 +83,9 @@ class aminoAcidScorer:
                 coefmixte = self.getParams()["m2"]
         else:
             coefmixte = 1
-        coefmixte += self.getParams()["mixte"]
+        coefmixte *= self.getParams()["mixte"]
         
-        return enf * coefmixte * self.blosum62(aa1, aa2)
+        return enf + coefmixte + self.blosum62(aa1, aa2)
             
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
