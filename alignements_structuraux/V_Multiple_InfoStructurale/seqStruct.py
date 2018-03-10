@@ -142,7 +142,7 @@ class seqStruct:
             self.name = "aSequenceHasNoName"
             self.seq = []
         else:
-            self.name = path[4:-4]
+            self.name = path[-8:-4]
             self.seq = []
             dico = get_seq(path)
             for cle in dico:
