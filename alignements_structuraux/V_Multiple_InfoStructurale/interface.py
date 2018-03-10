@@ -274,6 +274,9 @@ def launchInterface():
         params["enf"] = 1
         params["struct"] = 10
         params["vrac"] = 3
+        params["m1"] = 1
+        params["m2"] = 10
+        params["mixte"] = 1
 
 
         scorer = aminoAcidScorer(str(sName.get()), params)
