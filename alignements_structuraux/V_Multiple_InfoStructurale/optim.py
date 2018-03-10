@@ -163,7 +163,7 @@ def launchInterface():
         global SEQS, globalparams, bloc, SEQSmsf, filename
         msfToSeqs()
         globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
-        globalparams["extendGap"] = [float(oGm.get()), float(eGp.get())]
+        globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
         
         print("Parameters : " + str(globalparams))
         
@@ -230,7 +230,7 @@ def launchInterface():
     oGp.set(25)
     TextVaroGp = tk.Entry(FrameSS, textvariable=oGp, width=10)
     oGm = tk.StringVar()
-    oGm.set(2)
+    oGm.set(10)
     TextVaroGm = tk.Entry(FrameSS, textvariable=oGm, width=10)
     #TextVaroG.pack(padx=2,pady=2)
     TextVaroGp.grid(row =2, column =0, padx=1,pady=1)
