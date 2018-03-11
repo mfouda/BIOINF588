@@ -17,7 +17,8 @@ from score import aminoAcidScorer
 import urllib.request as urllib
 import os as os
 from eval_SPS import SPS_romainTuned
-    
+from eval_TC import TC
+   
 def showBloc(bloc):
     # Création de la fenêtre principale (main window)
     Mafenetre = tk.Tk()
@@ -149,6 +150,44 @@ def launchInterface():
     def Effacer():
         """ Efface la zone graphique """
         logger.delete(tk.ALL)
+        
+    def msftoDict () :
+        filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .msf", filetypes=[('msf files','.msf'),('all files','.*')])
+        log(logs, "Ouverture d'un .msf ...")
+        seqs = []
+        lines = open(filename, 'r').readlines()
+        n = len(lines)
+        nb_seqs = 0
+        i = 6
+        while lines[i][:5] == ' Name' :
+            nb_seqs += 1
+            i += 1
+        for k in range (nb_seqs) :
+            seqs.append('')
+        i += 5
+        res = dict()
+        last = dict()
+        
+        while (i + nb_seqs - 1) < n :
+            for k in range (nb_seqs) :
+                words = lines[i+k].split()
+                name = words[0][:4]
+                if name not in res :
+                    res[name] = seqStruct()
+                    res[name].setName(name)
+                    last[name] = 0
+                    
+                for word in words[1:] :
+                    for aa in word :
+                        d = dict()
+                        d["name"] = aa
+                        if(aa != "."):
+                            d["id"]=last[name]
+                            last[name] += 1        
+                        res[name].addAminoAcidAfter(d)
+            i += nb_seqs + 2
+    
+        return res
     
     def msfToSeqs():
         filename = tkfd.askopenfilename(initialdir = "../RV11/", title="Ouvrir un .msf", filetypes=[('msf files','.msf'),('all files','.*')])
@@ -201,6 +240,10 @@ def launchInterface():
     def SPS_MSF():
         global bloc
         log(logs, "SPS score = " + str(SPS_romainTuned(msfToSeqs(), bloc)))
+        
+    def TC_MSF():
+        global bloc
+        log(logs, "TC score = " + str(TC(msftoDict(), bloc)))
         
     def checkMSF():
         showSEQS(msfToSeqs())
@@ -381,6 +424,8 @@ def launchInterface():
     ButtonMSF.pack(padx=2,pady=2)
     ButtonSPS = tk.Button(FrameABUMSF,text="SPS with .msf",command=SPS_MSF)#, state=tk.DISABLED)
     ButtonSPS.pack(padx=2,pady=2)
+    ButtonTC = tk.Button(FrameABUMSF,text="TC with .msf",command=TC_MSF)#, state=tk.DISABLED)
+    ButtonTC.pack(padx=2,pady=2)
     # Création d'un widget Button (bouton Effacer)
     BoutonReset = tk.Button(FrameABU, text ='Reset', command = Reset)
     BoutonReset.pack(padx = 5, pady = 5)

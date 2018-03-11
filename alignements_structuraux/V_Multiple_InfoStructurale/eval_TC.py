@@ -84,6 +84,9 @@ def TC (ref_msf,our_result):
     seqs = [s for s in our_result.getSeqs()]
     return score_TC_computer(seqs, ref_msf)
 
+def TC_romainTuned (ref_msf,our_result):
+    return score_TC_computer(our_result, ref_msf)
+
 
 #seqs stocke notre alignement sous la forme d'une liste de seqStruct
 #dico stocke l'alignement de référence sous la forme d'un dico de seqStruct
@@ -120,7 +123,6 @@ def score_TC_computer (seqs, dico) :
         
         score += int(res)
     
-    print(score)
     return score/nb_col
 
 
@@ -133,8 +135,8 @@ def test_TC(filename, scorer) :
     ref = msftoDict('../RV11/' + filename + '.msf')
     print(TC(ref, our_bloc))
 
-import score
-scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
-#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-test_TC('BB11001', scorer1)
+#import score
+#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
+##scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+#test_TC('BB11001', scorer1)
 
