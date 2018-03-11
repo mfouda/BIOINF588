@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 11 13:59:18 2018
+
+@author: Jasmine
+"""
+
 from blocalignments import aligne_multiple
 from blocs import bloc
 from seqStruct import seqStruct
@@ -73,64 +80,61 @@ def strToSeqStruct(name, st) :
     return seq
 
 
-def SPS(ref_msf,our_result):
-    seqs = [v for v in ref_msf.values()]
-    dico = dict()
-    for l in our_result.getSeqs() :
-        dico[l.getName()] = l
-    return score_SPS_computer(seqs, dico)
+def TC (ref_msf,our_result):
+    seqs = [s for s in our_result.getSeqs()]
+    return score_TC_computer(seqs, ref_msf)
 
 
-def SPS_romainTuned(ref_msf,our_result):
-    dico = dict()
-    for l in our_result.getSeqs() :
-        dico[l.getName()] = l
-    return score_SPS_computer(ref_msf, dico)
-
-
-#seqs stocke l'alignement de référence sous la forme d'une liste de seqStruct
-#dico stocke notre alignement sous la forme d'un dico de seqStruct
-def score_SPS_computer (seqs, dico) :
-    score = 0
-    score_ref = 0
+#seqs stocke notre alignement sous la forme d'une liste de seqStruct
+#dico stocke l'alignement de référence sous la forme d'un dico de seqStruct
+# /!\ c'est le contraire pour SPS
+def score_TC_computer (seqs, dico) :
     nb_seq = len(seqs)
     nb_col = seqs[0].getLength()
+    nb_col_ref = dico[seqs[0].getName()].getLength()
+    i2 = [0]*nb_seq #i2[k] contient la position du premier aa non regardé de la séquence k de référence
+    score = 0
+
+    for i in range(nb_col) :
+        res = True
+        j = 0
+        
+        while j< nb_seq and 'id' not in seqs[j].getAminoAcid(i):
+            j += 1
+        seq_ref = dico[seqs[j].getName()]
+        while i2[j] < nb_col_ref and 'id' not in seq_ref.getAminoAcid(i2[j]) :
+            i2[j] += 1
+        #j est le numero de la première séquence non vide de la colonne i (=n'ayant pas de gap en position i) dans notre alignement
+        #i2[j] est le numero de la colonne de référence correspondante
+        
+        #dans cette boucle on regarde si les aa de la colonne i de notre alignement sont tous situés dans la colonne i2[j] de l'alignement de référence
+        for k in range (j+1,nb_seq) :
+            our_aa = seqs[k].getAminoAcid(i)
+            if 'id' in our_aa :
+                aa_ref = dico[seqs[k].getName()].getAminoAcid(i2[j])
+                while i2[k]< nb_col_ref and 'id' not in dico[seqs[k].getName()].getAminoAcid(i2[k]) :
+                    i2[k] += 1
+                i2[k] += 1
+                res = res*('id' in aa_ref and aa_ref['id']==our_aa['id'])
+        i2[j] += 1
+        
+        score += int(res)
     
-    for i in range(nb_seq-1) :
-        seq1 = seqs[i]
-        seq2 = dico[seq1.getName()]
-        nb_col2 = seq2.getLength()
-        j2 = 0
-        for j in range(nb_col) :
-            if 'id' in seq1.getAminoAcid(j):
-                while (j2 < nb_col2 and 'id' not in seq2.getAminoAcid(j2)) :
-                    j2 += 1
-                if (j2 >= nb_col2):
-                    break
-                col = []
-                for k in range(i+1, nb_seq):
-                    col += [(seqs[k].getAminoAcid(j), seqs[k].getName())]
-                for aa in col :
-                    if 'id' in aa[0] :
-                        score_ref += 1
-                        aa2 = dico[aa[1]].getAminoAcid(j2)
-                        if 'id' in aa2 :
-                            score += (aa[0]["id"] == aa2["id"])
-                j2 += 1
-    return score/score_ref
+    print(score)
+    return score/nb_col
 
 
-def test_SPS(filename, scorer) :
+def test_TC(filename, scorer) :
     fasta_seqs = SeqIO.parse(open('../RV11/' + filename + '.tfa'), 'fasta')
     seqs = []
     for fs in fasta_seqs :
         seqs.append(strToSeqStruct(fs.id, str(fs.seq)))
     our_bloc = aligne_multiple(seqs, scorer)
     ref = msftoDict('../RV11/' + filename + '.msf')
-    print(SPS(ref, our_bloc))
+    print(TC(ref, our_bloc))
 
-#import score
-#scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
-###scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
-#test_SPS('BB11001', scorer1)
+import score
+scorer1 = score.aminoAcidScorer("blosum62", dict({"openGap" : 11, "extendGap" : 1}))
+#scorer2 = aminoAcidScorer("blosum62mixte", dict({"openGap" : 6, "extendGap" : 1}))
+test_TC('BB11001', scorer1)
 
