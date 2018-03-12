@@ -198,7 +198,56 @@ def launchInterface():
                 bestparams = params
                 
         print(bestparams, SPS)
+    """
+        def optimize():
+        global SEQS, globalparams, bloc, SEQSmsf, filename
+        msfToSeqs()
+        globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
+        globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
+        
+        print("Parameters : " + str(globalparams))
+        
+        SPS = 0
+        bestparams = dict()
+        X = []
+        Y= []
+
+        
+        for i in range(0, int(niter.get())):
+            params = dict()
+            paras = []
+            for k, v in globalparams.items():
+                params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
+                paras+= [params[k]]
+            X += [paras]
+            #print("Iteration", i, str(params))
             
+            if(multithreading.get()):
+                keys = list(SEQS.keys())
+                T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), aminoAcidScorer(str(sName.get()), params), keys[k]]) for k in range(0, len(keys))]
+                [T[k].start() for k in range (0, len(keys))]
+                [T[k].join() for k in range (0, len(keys))]
+                tmpSPS = sum(T[k].getScore() for k in range(0, len(keys))) / len(SEQS)
+            
+            else:
+                tmpSPS = 0
+                scorer = aminoAcidScorer(str(sName.get()), params)
+                for k in SEQS.keys():
+                    tt = time.time()
+                    b = aligne_multiple(SEQS[k], scorer)
+                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
+                    tmpSPS += tmptmpSPS / len(SEQS)
+                    #print(k, int(1000*tmptmpSPS)/1000, time.time() - tt)
+            print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
+            if(tmpSPS > SPS):
+                SPS = tmpSPS
+                bestparams = params
+            Y+= [int(100000*tmpSPS)/100000]
+                
+        print(bestparams, SPS)
+        print(X)
+        print(Y)
+        """
     # Création de la fenêtre principale (main window)
     Mafenetre = tk.Tk()
     Mafenetre.title('Protein alignment')
