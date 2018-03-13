@@ -111,23 +111,35 @@ class bloc:
         
 #        ds = self.aminoAcidScore(self.getCol(0), [plus], scorer)
 #        db = self.aminoAcidScore(bloc.getCol(0), [plus], scorer)
-        ds = Os[0]
+        minf = - 10**4
+#        ds = Os[0]  ### -infini ?
+#        db = Ob[0]
+#        m[1, 0] = ds### -infini ?
+#        m[0, 1] = db
+#        ix[1, 0] = ds
+#        ix[0, 1] = db ### -infini ?
+#        iy[1, 0] = ds ### -infini ?
+#        iy[0, 1] = db
+#        isfrom[0, 1] = -1
+#        isfrom[1, 0] = 1
+        
+        ds = Os[0]  
         db = Ob[0]
-        m[1, 0] = ds
-        m[0, 1] = db
+        m[1, 0] = minf
+        m[0, 1] = minf
         ix[1, 0] = ds
-        ix[0, 1] = db
-        iy[1, 0] = ds
+        ix[0, 1] = minf ### -infini ?
+        iy[1, 0] = minf ### -infini ?
         iy[0, 1] = db
         isfrom[0, 1] = -1
-        isfrom[1, 0] = 1
+        isfrom[1, 0] = 1     
         
         for i in range(1, self.getSeq(0).getLength()):     #Calcul de la première ligne
 #            e = self.aminoAcidScore(self.getCol(i), [minus], scorer)
             e = Es[i]
-            m[i+1, 0] = m[i, 0] + e
+            m[i+1, 0] = minf
             ix[i+1, 0] = ix[i, 0] + e
-            iy[i+1, 0] = iy[i, 0] + e
+            iy[i+1, 0] = minf
             isfrom[i+1, 0] = 1
         
 #        E = [self.aminoAcidScore(bloc.getCol(j), [minus], scorer) for j in range(0, bloc.getLength())]
@@ -139,8 +151,8 @@ class bloc:
         for j in range(1, bloc.getSeq(0).getLength()):     #Calcul de la première colonne
 #            e = self.aminoAcidScore(bloc.getCol(j), [minus], scorer)
             e = Eb[j]
-            m[0, j+1] = m[0, j] + e
-            ix[0, j+1] = ix[0, j] + e
+            m[0, j+1] = minf
+            ix[0, j+1] = minf
             iy[0, j+1] = iy[0, j] + e
             isfrom[0, j+1] = -1
         

@@ -83,6 +83,7 @@ class aminoAcidScorer:
                 coefmixte = self.getParams()["m2"]
         else:
             coefmixte = 1
+            
         coefmixte *= self.getParams()["mixte"]
         
         return enf + coefmixte + self.blosum62(aa1, aa2)

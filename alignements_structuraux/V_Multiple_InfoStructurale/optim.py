@@ -26,6 +26,9 @@ from eval_SPS import SPS_romainTuned
 import random
 import time
 import warnings
+import pandas as pd
+from eval_TC import TC
+import datetime
 warnings.filterwarnings("ignore")
 
 from threading import Thread
@@ -167,9 +170,12 @@ def launchInterface():
         
         print("Parameters : " + str(globalparams))
         
+        PD = pd.DataFrame(columns = ["seqName", "SPS", "time", "iter"] + [k for k in globalparams.keys()], index=np.arange(0, int(niter.get()) * len(SEQS)))    
+
         SPS = 0
         bestparams = dict()
         
+        ii = 0
         for i in range(0, int(niter.get())):
             params = dict()
             for k, v in globalparams.items():
@@ -190,64 +196,26 @@ def launchInterface():
                     tt = time.time()
                     b = aligne_multiple(SEQS[k], scorer)
                     tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
+                    
+                    PD.loc[ii]["seqName"] = k
+                    PD.loc[ii]["iter"] = i
+                    PD.loc[ii]["SPS"] = tmptmpSPS
+                    PD.loc[ii]["time"] = time.time() - tt
+                    for k in params.keys():
+                        PD.loc[ii][k] = params[k]
+                    ii += 1
+                    
                     tmpSPS += tmptmpSPS / len(SEQS)
-                    print(k, int(1000*tmptmpSPS)/1000, time.time() - tt)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
             if(tmpSPS > SPS):
                 SPS = tmpSPS
                 bestparams = params
-                
+          
+        d = str(datetime.datetime.now())
+        d = d[:4] + "_" + d[5:7] + "_" + d[8:10] + "_" + d[11:13] + "_" + d[14:16] + "_" + d[17:19]
+        PD.to_csv("RESULT_" + d)
         print(bestparams, SPS)
-    """
-        def optimize():
-        global SEQS, globalparams, bloc, SEQSmsf, filename
-        msfToSeqs()
-        globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
-        globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
-        
-        print("Parameters : " + str(globalparams))
-        
-        SPS = 0
-        bestparams = dict()
-        X = []
-        Y= []
-
-        
-        for i in range(0, int(niter.get())):
-            params = dict()
-            paras = []
-            for k, v in globalparams.items():
-                params[k] = round(10*(v[0] + (v[1] - v[0])*random.uniform(0, 1)))/10
-                paras+= [params[k]]
-            X += [paras]
-            #print("Iteration", i, str(params))
-            
-            if(multithreading.get()):
-                keys = list(SEQS.keys())
-                T = [ALIGNEMENT_SCORE([SEQSmsf[keys[k]].copy(), SEQS[keys[k]].copy(), aminoAcidScorer(str(sName.get()), params), keys[k]]) for k in range(0, len(keys))]
-                [T[k].start() for k in range (0, len(keys))]
-                [T[k].join() for k in range (0, len(keys))]
-                tmpSPS = sum(T[k].getScore() for k in range(0, len(keys))) / len(SEQS)
-            
-            else:
-                tmpSPS = 0
-                scorer = aminoAcidScorer(str(sName.get()), params)
-                for k in SEQS.keys():
-                    tt = time.time()
-                    b = aligne_multiple(SEQS[k], scorer)
-                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
-                    tmpSPS += tmptmpSPS / len(SEQS)
-                    #print(k, int(1000*tmptmpSPS)/1000, time.time() - tt)
-            print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
-            if(tmpSPS > SPS):
-                SPS = tmpSPS
-                bestparams = params
-            Y+= [int(100000*tmpSPS)/100000]
-                
-        print(bestparams, SPS)
-        print(X)
-        print(Y)
-        """
+    
     # Création de la fenêtre principale (main window)
     Mafenetre = tk.Tk()
     Mafenetre.title('Protein alignment')
