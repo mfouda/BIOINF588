@@ -2,10 +2,48 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0812ac5-ab11-4e32-9f88-c4a85669712e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/interface.py" afterPath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/interface.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11001.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11001.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11002.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11002.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11003.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11003.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11004.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11004.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11008.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11008.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11009.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11009.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11010.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11010.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11011.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11011.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11012.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11012.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11013.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11013.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11015.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11015.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11017.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11017.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11021.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11021.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11022.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11022.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11024.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11024.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11025.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11025.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11029.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11029.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11035.msf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/RV11_BB/BB11035.tfa" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/RESULT_2018_03_13_16_09_47.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/alignements_structuraux/new log analyser.ipynb" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/RESULT_2018_03_13_15_19_47" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py" afterPath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/score.py" afterPath="$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/score.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p_loop/project.py" afterPath="$PROJECT_DIR$/p_loop/project.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,8 +69,8 @@
       <file leaf-file-name="score.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/score.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="91" column="12" lean-forward="true" selection-start-line="91" selection-start-column="12" selection-end-line="91" selection-end-column="12" />
+            <state relative-caret-position="478">
+              <caret line="202" column="43" lean-forward="false" selection-start-line="202" selection-start-column="43" selection-end-line="202" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -113,8 +151,12 @@
         <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="351">
-              <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
-              <folding />
+              <caret line="181" column="0" lean-forward="false" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+              <folding>
+                <marker date="1520960594763" expanded="true" signature="8788:8820" ph="..." />
+                <marker date="1520960594763" expanded="true" signature="8788:12867" ph="..." />
+                <marker date="1520960594763" expanded="true" signature="10637:10721" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -575,8 +617,12 @@
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/optim.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="351">
-          <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
-          <folding />
+          <caret line="181" column="0" lean-forward="false" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+          <folding>
+            <marker date="1520960594763" expanded="true" signature="8788:8820" ph="..." />
+            <marker date="1520960594763" expanded="true" signature="8788:12867" ph="..." />
+            <marker date="1520960594763" expanded="true" signature="10637:10721" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -592,8 +638,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/alignements_structuraux/V_Multiple_InfoStructurale/score.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="91" column="12" lean-forward="true" selection-start-line="91" selection-start-column="12" selection-end-line="91" selection-end-column="12" />
+        <state relative-caret-position="478">
+          <caret line="202" column="43" lean-forward="false" selection-start-line="202" selection-start-column="43" selection-end-line="202" selection-end-column="43" />
           <folding />
         </state>
       </provider>

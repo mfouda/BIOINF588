@@ -164,7 +164,30 @@ class aminoAcidScorer:
         coefmixte *= self.getParams()["struct_mixte"]
         
         return enf + coefmixte + self.blosum62(aa1, aa2)
-            
+    
+    def score_Jas(self, aa1, aa2) :
+        enf1 = aa1["enfouissement"]
+        enf2 = aa2["enfouissement"]
+        enf = self.getParams()["enf"]*(0.5 + enf1)*(0.5 + enf2)*(enf1 - enf2)**2
+        
+        struct = self.getParams()["struct"]
+        s1 = aa1["struct"]
+        s2 = aa2["struct"]
+        if s1 == 'V' :
+            if s2 == 'V' :
+                struct *= self.getParams()["p1"]
+            else :
+                struct *= self.getParams()["p4"]
+        else :
+            if s1 == s2 :
+                struct *= self.getParams()["p2"]
+            else :
+                struct *= self.getParams()["p3"]
+        #a priori p1<p2<p3<p4
+        
+        return (1 + enf + struct)*self.blosum62(aa1, aa2)
+    
+    
     def computeScore(self, aa1, aa2):
         if(self.getName() == "blosum62"):
             return self.blosum62(aa1, aa2)
@@ -176,4 +199,6 @@ class aminoAcidScorer:
             return self.total(aa1, aa2)
         if (self.getName() == "testRomain"):
             return self.testRomain(aa1, aa2)
+        if (self.getName() == "score_Jas"):
+            return self.score_Jas(aa1, aa2)
         return 0

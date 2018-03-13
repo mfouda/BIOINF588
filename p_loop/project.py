@@ -303,6 +303,7 @@ def findUniprotCodeFromName(name):
     page = urllib.urlopen("https://www.rcsb.org/structure/" + name)
     #print(page.read())
     page = str(page.read()).split("http://www.uniprot.org/uniprot/")[1]
+    print(str(page.read()))
     code = ""
     while(page[0] != '"'):
         code += page[0]
@@ -311,8 +312,8 @@ def findUniprotCodeFromName(name):
     return(code)
     
 ########## Executer Q3 ###########
-#name = "2gaa"
-#print(findUniprotCodeFromName(name))
+name = "2gaa"
+print(findUniprotCodeFromName(name))
 ##################################
 
 # Question 4 :  Telecharger séquence à partir du code uniprot
