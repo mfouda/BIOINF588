@@ -301,9 +301,7 @@ def getInfoFromPDBFile(path):
     
 def findUniprotCodeFromName(name):
     page = urllib.urlopen("https://www.rcsb.org/structure/" + name)
-    #print(page.read())
     page = str(page.read()).split("http://www.uniprot.org/uniprot/")[1]
-    print(str(page.read()))
     code = ""
     while(page[0] != '"'):
         code += page[0]
