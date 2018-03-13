@@ -27,7 +27,6 @@ import random
 import time
 import warnings
 import pandas as pd
-from eval_TC import TC
 import datetime
 warnings.filterwarnings("ignore")
 
@@ -192,19 +191,19 @@ def launchInterface():
             else:
                 tmpSPS = 0
                 scorer = aminoAcidScorer(str(sName.get()), params)
-                for k in SEQS.keys():
+                for kk in SEQS.keys():
                     tt = time.time()
-                    b = aligne_multiple(SEQS[k], scorer)
-                    tmptmpSPS = SPS_romainTuned(SEQSmsf[k], b)
+                    b = aligne_multiple(SEQS[kk], scorer)
+                    tmptmpSPS = SPS_romainTuned(SEQSmsf[kk], b)
                     
-                    PD.loc[ii]["seqName"] = k
+                    PD.loc[ii]["seqName"] = kk
                     PD.loc[ii]["iter"] = i
                     PD.loc[ii]["SPS"] = tmptmpSPS
                     PD.loc[ii]["time"] = time.time() - tt
                     for k in params.keys():
                         PD.loc[ii][k] = params[k]
                     ii += 1
-                    
+                    print(kk, tmptmpSPS, time.time() - tt)
                     tmpSPS += tmptmpSPS / len(SEQS)
             print("Iteration", i, "SPS =", int(100000*tmpSPS)/100000)
             if(tmpSPS > SPS):
@@ -213,7 +212,7 @@ def launchInterface():
           
         d = str(datetime.datetime.now())
         d = d[:4] + "_" + d[5:7] + "_" + d[8:10] + "_" + d[11:13] + "_" + d[14:16] + "_" + d[17:19]
-        PD.to_csv("RESULT_" + d)
+        PD.to_csv("RESULT_" + d + ".csv", index = False)
         print(bestparams, SPS)
     
     # Création de la fenêtre principale (main window)
