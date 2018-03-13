@@ -314,13 +314,6 @@ def launchInterface():
         params["openGap"] = float(oG.get())
         params["extendGap"] = float(eG.get())
 
-        params["enf"] = 1
-        params["struct"] = 10
-        params["vrac"] = 3
-        params["m1"] = 1
-        params["m2"] = 10
-        params["mixte"] = 1
-
 
         scorer = aminoAcidScorer(str(sName.get()), params)
         log(logs, "scorer : " + scorer.getName() + " " + str(scorer.getParams()))
@@ -328,7 +321,7 @@ def launchInterface():
         bloc = aligne_multiple(SEQS, scorer)
         ButtonMSF['state'] = 'normal'
         showBloc(bloc)
-            
+
     # Création de la fenêtre principale (main window)
     Mafenetre = tk.Tk()
     Mafenetre.title('Protein alignment')
