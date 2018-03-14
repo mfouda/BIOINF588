@@ -168,14 +168,14 @@ def launchInterface():
         #globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
 
         if "enf_mixte" not in globalparams:
-            globalparams["enf_mixte"]= [0,0]
+            globalparams["enf_mixte"]= [0,4]
 
         if "vrac_mixte" not in globalparams:
-            globalparams["vrac_mixte"] = [1,3]
+            globalparams["vrac_mixte"] = [0,0]
         if "helice_mixte" not in globalparams:
-            globalparams["helice_mixte"]= [2,6]
+            globalparams["helice_mixte"]= [0,0]
         if "struct_mixte" not in globalparams:
-            globalparams["struct_mixte"] = [0,4]
+            globalparams["struct_mixte"] = [0,0]
 
 
         if "enf_propre" not in globalparams:

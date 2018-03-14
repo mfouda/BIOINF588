@@ -133,7 +133,6 @@ class aminoAcidScorer:
 
     #scorer purement propre
     def coef_propre(self, aa1, aa2):
-        
         if(aa1["name"] in ["-", "+"] or aa2["name"] in ["-", "+"]):
             return 0
         else:
