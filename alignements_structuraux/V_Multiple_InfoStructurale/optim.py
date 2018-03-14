@@ -180,8 +180,8 @@ def launchInterface():
         if "enf_propre" not in globalparams:
             globalparams["enf_propre"]= [0,0]
 
-        if "vrac_propre" not in globalparams:
-            globalparams["vrac_propre"] = [0,0]
+        if "struct_propre" not in globalparams:
+            globalparams["struct_propre"] = [0,0]
         if "helice_propre" not in globalparams:
             globalparams["helice_propre"]= [4,4]
 

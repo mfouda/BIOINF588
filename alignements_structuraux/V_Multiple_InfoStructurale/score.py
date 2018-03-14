@@ -24,8 +24,8 @@ class aminoAcidScorer:
         if "enf_propre" not in params:
             params["enf_propre"]= 1
 
-        if "vrac_propre" not in params:
-            params["vrac_propre"] = 1
+        if "struct_propre" not in params:
+            params["struct_propre"] = 1
         if "helice_propre" not in params:
             params["helice_propre"]= 4
 
