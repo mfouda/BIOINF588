@@ -175,7 +175,8 @@ def launchInterface():
         if "helice_mixte" not in globalparams:
             globalparams["helice_mixte"]= [4,4]
         if "struct_mixte" not in globalparams:
-            globalparams["struct_mixte"] = [1,1]
+            globalparams["struct_mixte"] = [0,0]
+
 
         if "enf_propre" not in globalparams:
             globalparams["enf_propre"]= [0,0]
@@ -186,7 +187,7 @@ def launchInterface():
             globalparams["helice_propre"]= [4,4]
 
         if "openGap" not in globalparams:
-            globalparams["openGap"] = [19,19]
+            globalparams["openGap"] = [15.6,15.6]
         if "extendGap" not in globalparams:
             globalparams["extendGap"] = [2,2]
 
