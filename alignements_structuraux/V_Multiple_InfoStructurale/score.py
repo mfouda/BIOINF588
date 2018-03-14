@@ -110,37 +110,45 @@ class aminoAcidScorer:
     #On définit des scorers
     #scorer purement mixte
     def coef_mixte(self, aa1, aa2):
-        enf = self.getParams()["enf_mixte"]
-
-        vrac = self.getParams()["vrac_mixte"]
-        helice = self.getParams()["helice_mixte"]
-        struct = self.getParams()["struct_mixte"]
-
-        #terme mixte d'enfouissement
-        coef_enf = self.enf_mixte(aa1, aa2, enf)
-
-        #terme mixte structural
-        coef_struct = self.struct_mixte(aa1, aa2, vrac, helice, struct)
-
-        return coef_enf + coef_struct
+        
+        if(aa1["name"] in ["-", "+"] or aa2["name"] in ["-", "+"]):
+            return 0
+        else:
+            enf = self.getParams()["enf_mixte"]
+    
+            vrac = self.getParams()["vrac_mixte"]
+            helice = self.getParams()["helice_mixte"]
+            struct = self.getParams()["struct_mixte"]
+    
+            #terme mixte d'enfouissement
+            coef_enf = self.enf_mixte(aa1, aa2, enf)
+    
+            #terme mixte structural
+            coef_struct = self.struct_mixte(aa1, aa2, vrac, helice, struct)
+    
+            return coef_enf + coef_struct
 
     def mixte(self, aa1, aa2):
         return self.blosum62(aa1, aa2) + self.coef_mixte(aa1, aa2)
 
     #scorer purement propre
     def coef_propre(self, aa1, aa2):
-        enf = self.getParams()["enf_propre"]
-
-        struct = self.getParams()["struct_propre"]
-        helice = self.getParams()["helice_propre"]
-
-        #terme propre d'enfouissement
-        coef_enf = self.enf_propre(aa1, aa2, enf)
-
-        # terme propre structural
-        coef_struct = self.struct_propre(aa1, aa2, struct, helice)
-
-        return coef_enf + coef_struct
+        
+        if(aa1["name"] in ["-", "+"] or aa2["name"] in ["-", "+"]):
+            return 0
+        else:
+            enf = self.getParams()["enf_propre"]
+    
+            struct = self.getParams()["struct_propre"]
+            helice = self.getParams()["helice_propre"]
+    
+            #terme propre d'enfouissement
+            coef_enf = self.enf_propre(aa1, aa2, enf)
+    
+            # terme propre structural
+            coef_struct = self.struct_propre(aa1, aa2, struct, helice)
+    
+            return coef_enf + coef_struct
 
     def propre(self, aa1, aa2):
         return self.blosum62(aa1, aa2) + self.coef_propre(aa1, aa2)
