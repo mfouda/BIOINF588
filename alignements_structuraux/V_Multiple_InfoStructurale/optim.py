@@ -168,7 +168,7 @@ def launchInterface():
         #globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
 
         if "enf_mixte" not in globalparams:
-            globalparams["enf_mixte"]= [0,0]
+            globalparams["enf_mixte"]= [0,4]
 
         if "vrac_mixte" not in globalparams:
             globalparams["vrac_mixte"] = [2,2]
@@ -187,9 +187,9 @@ def launchInterface():
             globalparams["helice_propre"]= [4,4]
 
         if "openGap" not in globalparams:
-            globalparams["openGap"] = [15.6,15.6]
+            globalparams["openGap"] = [14.3,14.3]
         if "extendGap" not in globalparams:
-            globalparams["extendGap"] = [2,2]
+            globalparams["extendGap"] = [2.9,2.9]
 
         print("Parameters : " + str(globalparams))
         
