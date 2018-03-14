@@ -171,20 +171,20 @@ def launchInterface():
             globalparams["enf_mixte"]= [0,0]
 
         if "vrac_mixte" not in globalparams:
-            globalparams["vrac_mixte"] = [1,3]
+            globalparams["vrac_mixte"] = [0,0]
         if "helice_mixte" not in globalparams:
-            globalparams["helice_mixte"]= [2,6]
+            globalparams["helice_mixte"]= [0,0]
         if "struct_mixte" not in globalparams:
-            globalparams["struct_mixte"] = [0,4]
+            globalparams["struct_mixte"] = [0,0]
 
 
         if "enf_propre" not in globalparams:
             globalparams["enf_propre"]= [0,0]
 
         if "struct_propre" not in globalparams:
-            globalparams["struct_propre"] = [0,0]
+            globalparams["struct_propre"] = [0,3]
         if "helice_propre" not in globalparams:
-            globalparams["helice_propre"]= [4,4]
+            globalparams["helice_propre"]= [1,3]
 
         if "openGap" not in globalparams:
             globalparams["openGap"] = [14.3,14.3]
