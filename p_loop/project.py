@@ -360,13 +360,49 @@ def findStructureFromsUniprotCode(uniprotCode):
 #uniprotCode = findUniprotCodeFromName(name)
 #findStructureFromsUniprotCode(uniprotCode)
 ##################################
+
+
+# Question 7 trouver les Ploops de 2GAA    
+def fromFastaProtoPickleProtein(path):
+    fasta_sequences = SeqIO.parse(open(path),'fasta')
+
+    dicoProt1 = dict()
+    for fasta in fasta_sequences:
+        name, sequence = fasta.id, str(fasta.seq)
+        dicoProt1[name] = sequence
+    
+    return dicoProt1
+
+def findPloopPos(path):
+    dicoProt = pk.load(open(path, "rb" ))
+    
+    dicoPLOOP_PROT = dict()
+    for k, v in dicoProt.items():
+        if hasPloop(v):
+            print(k)
+            print(hasPloopPos(v))
+            
+    return dicoPLOOP_PROT
+
+def hasPloopPos(seq):
+    for i in range (0, len(seq)):
+        if ((len(seq)>i+7)
+        and (seq[i+5]=="G")
+        and (seq[i+6]=="K")
+        and (seq[i]=="A" or seq[i]=="G")
+        and (seq[i+7]=="S" or seq[i+7]=="T")):
+            return i
+
+########## Executer Q7 ###########
+dicoProt1 = fromFastaProtoPickleProtein("uniprotFiles/P43591.fasta")
+pk.dump(dicoProt1, open( "pickleObjects/dicoPROT1.p", "wb" ) )
+print(findPloopPos("pickleObjects/dicoPROT1.p"))
+##################################
     
 # Question 7 :  Quelles sont celles de la levure ?
     
 # Question 8 :  Structures semblables grace au programme SSM de l'EBI ?
     
-#On nous donne les mêmes : 2gaa et 2ga8
-#FONCTION ???
 
 
 
