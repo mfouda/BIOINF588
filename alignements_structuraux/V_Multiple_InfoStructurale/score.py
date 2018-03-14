@@ -85,7 +85,7 @@ class aminoAcidScorer:
         coef_enf *= enf
         return coef_enf
 
-    def struct_propre(self, aa1, aa2, helice, struct):
+    def struct_propre(self, aa1, aa2, struct, helice):
         coef1 = 1
         if (aa1["struct"] != "V"):
             coef1 = helice
@@ -107,6 +107,7 @@ class aminoAcidScorer:
         coef_struct *= struct
         return coef_struct
 
+    #On définit des scorers
     #scorer purement mixte
     def coef_mixte(self, aa1, aa2):
         enf = self.getParams()["enf_mixte"]
@@ -130,14 +131,14 @@ class aminoAcidScorer:
     def coef_propre(self, aa1, aa2):
         enf = self.getParams()["enf_propre"]
 
-        vrac = self.getParams()["vrac_propre"]
+        struct = self.getParams()["struct_propre"]
         helice = self.getParams()["helice_propre"]
 
         #terme propre d'enfouissement
         coef_enf = self.enf_propre(aa1, aa2, enf)
 
         # terme propre structural
-        coef_struct = self.struct_propre(aa1, aa2, vrac, helice)
+        coef_struct = self.struct_propre(aa1, aa2, struct, helice)
 
         return (1 + coef_enf + coef_struct)
 
@@ -146,7 +147,7 @@ class aminoAcidScorer:
 
     #scorer avec effets mixte et propre
     def total(self, aa1, aa2):
-        return self.blosum62(aa1, aa2) * self.coef_propre(aa1, aa2) * self.coef_mixte(aa1, aa2)
+        return (self.blosum62(aa1, aa2) + self.coef_propre(aa1, aa2) - 1) * self.coef_mixte(aa1, aa2)
 
 
     def testRomain(self, aa1, aa2):

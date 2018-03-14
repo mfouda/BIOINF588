@@ -164,11 +164,11 @@ def launchInterface():
     def optimize():
         global SEQS, globalparams, bloc, SEQSmsf, filename
         msfToSeqs()
-        globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
-        globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
+        #globalparams["openGap"] = [float(oGm.get()), float(oGp.get())]
+        #globalparams["extendGap"] = [float(eGm.get()), float(eGp.get())]
 
         if "enf_mixte" not in globalparams:
-            globalparams["enf_mixte"]= [1,1]
+            globalparams["enf_mixte"]= [0,0]
 
         if "vrac_mixte" not in globalparams:
             globalparams["vrac_mixte"] = [2,2]
@@ -178,10 +178,10 @@ def launchInterface():
             globalparams["struct_mixte"] = [1,1]
 
         if "enf_propre" not in globalparams:
-            globalparams["enf_propre"]= [1,1]
+            globalparams["enf_propre"]= [0,0]
 
         if "vrac_propre" not in globalparams:
-            globalparams["vrac_propre"] = [1,1]
+            globalparams["vrac_propre"] = [0,0]
         if "helice_propre" not in globalparams:
             globalparams["helice_propre"]= [4,4]
 
