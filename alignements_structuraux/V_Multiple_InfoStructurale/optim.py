@@ -182,9 +182,9 @@ def launchInterface():
             globalparams["enf_propre"]= [0,0]
 
         if "struct_propre" not in globalparams:
-            globalparams["struct_propre"] = [0,0]
+            globalparams["struct_propre"] = [0,3]
         if "helice_propre" not in globalparams:
-            globalparams["helice_propre"]= [4,4]
+            globalparams["helice_propre"]= [1,3]
 
         if "openGap" not in globalparams:
             globalparams["openGap"] = [14.3,14.3]
